@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
-
 class ProjectStatusCard extends StatelessWidget {
   final String title;
   final List<ProjectStatus> statuses;
-
   const ProjectStatusCard({
     super.key,
     required this.title,
     required this.statuses,
   });
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -28,7 +25,6 @@ class ProjectStatusCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Title
           Text(
             title,
             style: const TextStyle(
@@ -38,8 +34,6 @@ class ProjectStatusCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20),
-
-          // Status List
           ...statuses
               .map((status) => _buildStatusItem(context, status))
               .toList(),
@@ -47,13 +41,11 @@ class ProjectStatusCard extends StatelessWidget {
       ),
     );
   }
-
   Widget _buildStatusItem(BuildContext context, ProjectStatus status) {
     return Container(
       margin: const EdgeInsets.only(bottom: 20),
       child: Column(
         children: [
-          // Status Label and Count
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -76,8 +68,6 @@ class ProjectStatusCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 10),
-
-          // Progress Bar
           Container(
             width: double.infinity,
             height: 6,
@@ -104,13 +94,11 @@ class ProjectStatusCard extends StatelessWidget {
     );
   }
 }
-
 class ProjectStatus {
   final String label;
   final int count;
   final double percentage;
   final Color color;
-
   ProjectStatus({
     required this.label,
     required this.count,

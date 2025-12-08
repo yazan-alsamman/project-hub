@@ -2,13 +2,36 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:junior/core/constant/color.dart';
 import 'package:junior/core/constant/routes.dart';
+import 'package:junior/core/services/auth_service.dart';
+import 'package:junior/data/repository/auth_repository.dart';
 import 'package:junior/view/widgets/common/build_menu_item.dart';
-
-class CustomDrawer extends StatelessWidget {
+class CustomDrawer extends StatefulWidget {
   final Function(String)? onItemTap;
-
   const CustomDrawer({super.key, this.onItemTap});
-
+  @override
+  State<CustomDrawer> createState() => _CustomDrawerState();
+}
+class _CustomDrawerState extends State<CustomDrawer> {
+  String? _username;
+  String? _email;
+  bool _isLoading = true;
+  @override
+  void initState() {
+    super.initState();
+    _loadUserInfo();
+  }
+  Future<void> _loadUserInfo() async {
+    final authService = AuthService();
+    final username = await authService.getUsername();
+    final email = await authService.getUserEmail();
+    if (mounted) {
+      setState(() {
+        _username = username;
+        _email = email;
+        _isLoading = false;
+      });
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -16,7 +39,6 @@ class CustomDrawer extends StatelessWidget {
       child: SafeArea(
         child: Column(
           children: [
-            // Header Section
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(20),
@@ -47,34 +69,43 @@ class CustomDrawer extends StatelessWidget {
                       ),
                       const SizedBox(width: 12),
                       Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'John Doe',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
+                        child: _isLoading
+                            ? const SizedBox(
+                                height: 40,
+                                child: Center(
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                    strokeWidth: 2,
+                                  ),
+                                ),
+                              )
+                            : Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    _username ?? 'User',
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  if (_email != null && _email!.isNotEmpty)
+                                    Text(
+                                      _email!,
+                                      style: TextStyle(
+                                        color: Colors.white.withOpacity(0.9),
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                ],
                               ),
-                            ),
-                            Text(
-                              'john.doe@company.com',
-                              style: TextStyle(
-                                color: Colors.white.withOpacity(0.9),
-                                fontSize: 14,
-                              ),
-                            ),
-                          ],
-                        ),
                       ),
                     ],
                   ),
                 ],
               ),
             ),
-
-            // Menu Items
             Expanded(
               child: ListView(
                 padding: EdgeInsets.zero,
@@ -83,6 +114,10 @@ class CustomDrawer extends StatelessWidget {
                     icon: Icons.group,
                     title: 'Team',
                     onTap: () {
+                      if (widget.onItemTap != null) {
+                        widget.onItemTap!('Team');
+                      }
+                      Get.back();
                       Get.offAllNamed(AppRoute.team);
                     },
                   ),
@@ -90,6 +125,10 @@ class CustomDrawer extends StatelessWidget {
                     icon: Icons.assignment,
                     title: 'Tasks',
                     onTap: () {
+                      if (widget.onItemTap != null) {
+                        widget.onItemTap!('Tasks');
+                      }
+                      Get.back();
                       Get.offAllNamed(AppRoute.tasks);
                     },
                   ),
@@ -97,6 +136,10 @@ class CustomDrawer extends StatelessWidget {
                     icon: Icons.settings,
                     title: 'Settings',
                     onTap: () {
+                      if (widget.onItemTap != null) {
+                        widget.onItemTap!('Settings');
+                      }
+                      Get.back();
                       Get.offAllNamed(AppRoute.settings);
                     },
                   ),
@@ -104,6 +147,10 @@ class CustomDrawer extends StatelessWidget {
                     icon: Icons.folder,
                     title: 'Projects',
                     onTap: () {
+                      if (widget.onItemTap != null) {
+                        widget.onItemTap!('Projects');
+                      }
+                      Get.back();
                       Get.offAllNamed(AppRoute.projects);
                     },
                   ),
@@ -111,6 +158,10 @@ class CustomDrawer extends StatelessWidget {
                     icon: Icons.analytics,
                     title: 'Analytics',
                     onTap: () {
+                      if (widget.onItemTap != null) {
+                        widget.onItemTap!('Analytics');
+                      }
+                      Get.back();
                       Get.offAllNamed(AppRoute.analytics);
                     },
                   ),
@@ -118,14 +169,27 @@ class CustomDrawer extends StatelessWidget {
                     icon: Icons.dashboard,
                     title: 'Project Dashboard',
                     onTap: () {
+                      if (widget.onItemTap != null) {
+                        widget.onItemTap!('Project Dashboard');
+                      }
+                      Get.back();
                       Get.offAllNamed(AppRoute.projectDashboard);
+                    },
+                  ),
+                  buildMenuItem(
+                    icon: Icons.assignment_ind,
+                    title: 'Assignment',
+                    onTap: () {
+                      if (widget.onItemTap != null) {
+                        widget.onItemTap!('Assignment');
+                      }
+                      Get.back();
+                      Get.offAllNamed(AppRoute.assignments);
                     },
                   ),
                 ],
               ),
             ),
-
-            // Footer
             Divider(color: AppColor.borderColor, height: 1),
             Padding(
               padding: const EdgeInsets.all(16),
@@ -138,8 +202,17 @@ class CustomDrawer extends StatelessWidget {
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                onTap: () {
-                  Get.offAllNamed(AppRoute.login);
+                onTap: () async {
+                  final authRepository = AuthRepository();
+                  final result = await authRepository.logout();
+                  result.fold(
+                    (error) {
+                      Get.offAllNamed(AppRoute.login);
+                    },
+                    (success) {
+                      Get.offAllNamed(AppRoute.login);
+                    },
+                  );
                 },
               ),
             ),

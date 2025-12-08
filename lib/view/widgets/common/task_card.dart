@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:junior/core/constant/color.dart';
-
 class TaskCard extends StatelessWidget {
   final String title;
   final String subtitle;
@@ -13,7 +13,8 @@ class TaskCard extends StatelessWidget {
   final Color avatarColor;
   final bool isCompleted;
   final bool isPending;
-
+  final VoidCallback? onEdit;
+  final VoidCallback? onDelete;
   const TaskCard({
     super.key,
     required this.title,
@@ -27,10 +28,10 @@ class TaskCard extends StatelessWidget {
     this.avatarColor = AppColor.primaryColor,
     this.isCompleted = false,
     this.isPending = false,
+    this.onEdit,
+    this.onDelete,
   });
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildCardContent(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
@@ -42,7 +43,6 @@ class TaskCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Title Section with Icon
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -101,10 +101,7 @@ class TaskCard extends StatelessWidget {
               ),
             ],
           ),
-
           const SizedBox(height: 12),
-
-          // Category Tag
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
@@ -120,13 +117,9 @@ class TaskCard extends StatelessWidget {
               ),
             ),
           ),
-
           const SizedBox(height: 16),
-
-          // Bottom Section: Priority, Due Date, Assignee
           Row(
             children: [
-              // Priority Tag
               Container(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 10,
@@ -152,10 +145,7 @@ class TaskCard extends StatelessWidget {
                   ],
                 ),
               ),
-
               const SizedBox(width: 12),
-
-              // Due Date
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -171,8 +161,6 @@ class TaskCard extends StatelessWidget {
                   ],
                 ),
               ),
-
-              // Assignee
               Row(
                 children: [
                   Container(
@@ -222,6 +210,46 @@ class TaskCard extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+  @override
+  Widget build(BuildContext context) {
+    if (onEdit == null && onDelete == null) {
+      return _buildCardContent(context);
+    }
+    return Slidable(
+      key: ValueKey(title),
+      endActionPane: ActionPane(
+        motion: const DrawerMotion(),
+        extentRatio: 0.3,
+        children: [
+          if (onEdit != null)
+            SlidableAction(
+              onPressed: (_) => onEdit!(),
+              backgroundColor: AppColor.primaryColor,
+              foregroundColor: Colors.white,
+              icon: Icons.edit,
+              label: 'Edit',
+              borderRadius: const BorderRadius.only(
+                topRight: Radius.circular(12),
+                bottomRight: Radius.circular(12),
+              ),
+            ),
+          if (onDelete != null)
+            SlidableAction(
+              onPressed: (_) => onDelete!(),
+              backgroundColor: AppColor.errorColor,
+              foregroundColor: Colors.white,
+              icon: Icons.delete,
+              label: 'Delete',
+              borderRadius: const BorderRadius.only(
+                topRight: Radius.circular(12),
+                bottomRight: Radius.circular(12),
+              ),
+            ),
+        ],
+      ),
+      child: _buildCardContent(context),
     );
   }
 }

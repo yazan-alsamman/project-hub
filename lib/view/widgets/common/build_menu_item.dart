@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:junior/core/constant/color.dart';
-
 class buildMenuItem extends StatelessWidget {
   final IconData icon;
   final String title;
   final VoidCallback onTap;
   const buildMenuItem({super.key, required this.icon, required this.title, required this.onTap});
-
   @override
   Widget build(BuildContext context) {
-
     return ListTile(
       leading: Icon(icon, color: AppColor.textColor, size: 24),
       title: Text(

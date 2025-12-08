@@ -4,13 +4,11 @@ import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:junior/core/constant/routes.dart';
 import 'package:junior/core/services/services.dart';
 import 'package:junior/data/static/onBoarding_data.dart';
-
 abstract class OnBoardingController extends GetxController {
   next();
   onPageChanged(int index);
   resetOnBoarding(); // دالة لإعادة تعيين حالة onBoarding
 }
-
 class OnBoardingControllerImp extends OnBoardingController {
   late PageController pageController;
   int currentPage = 0;
@@ -29,22 +27,18 @@ class OnBoardingControllerImp extends OnBoardingController {
       );
     }
   }
-
   @override
   onPageChanged(int index) {
     currentPage = index;
     update();
   }
-
   @override
   void onInit() {
     pageController = PageController();
     super.onInit();
   }
-
   @override
   resetOnBoarding() {
-    // إعادة تعيين حالة onBoarding (لأغراض الاختبار)
     myservices.sharedPreferences.remove("onBoarding");
     Get.offAllNamed("/");
   }

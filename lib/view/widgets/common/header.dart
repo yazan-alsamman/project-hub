@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:junior/core/constant/color.dart';
 import 'package:junior/core/constant/responsive.dart';
 import 'package:junior/view/widgets/common/main_button.dart';
-
 class Header extends StatelessWidget {
   final String title;
   final String subtitle;
@@ -19,7 +18,6 @@ class Header extends StatelessWidget {
     this.buttonIcon,
     this.onPressed,
   });
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -50,7 +48,6 @@ class Header extends StatelessWidget {
                 height: Responsive.size(context, mobile: 50),
               )
             : Container(),
-
         SizedBox(height: Responsive.spacing(context, mobile: 30)),
       ],
     );

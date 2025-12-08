@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:junior/core/constant/color.dart';
 import 'package:junior/core/constant/responsive.dart';
-
 class ProjectCard extends StatelessWidget {
   final String title;
   final String company;
@@ -11,7 +12,8 @@ class ProjectCard extends StatelessWidget {
   final int teamMembers;
   final String status;
   final VoidCallback? onTap;
-
+  final VoidCallback? onEdit;
+  final VoidCallback? onDelete;
   const ProjectCard({
     super.key,
     required this.title,
@@ -23,8 +25,9 @@ class ProjectCard extends StatelessWidget {
     required this.teamMembers,
     required this.status,
     this.onTap,
+    this.onEdit,
+    this.onDelete,
   });
-
   Color _getStatusColor() {
     switch (status.toLowerCase()) {
       case 'active':
@@ -37,7 +40,6 @@ class ProjectCard extends StatelessWidget {
         return const Color(0xFF2196F3);
     }
   }
-
   Color _getStatusBackgroundColor() {
     switch (status.toLowerCase()) {
       case 'active':
@@ -50,9 +52,7 @@ class ProjectCard extends StatelessWidget {
         return const Color(0xFFE0F2F7);
     }
   }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildCardContent(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(bottom: Responsive.spacing(context, mobile: 16)),
       decoration: BoxDecoration(
@@ -80,7 +80,6 @@ class ProjectCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Header Section
                 Row(
                   children: [
                     Container(
@@ -132,10 +131,7 @@ class ProjectCard extends StatelessWidget {
                     ),
                   ],
                 ),
-
                 SizedBox(height: Responsive.spacing(context, mobile: 16)),
-
-                // Description
                 Text(
                   description,
                   style: TextStyle(
@@ -144,10 +140,7 @@ class ProjectCard extends StatelessWidget {
                     height: 1.4,
                   ),
                 ),
-
                 SizedBox(height: Responsive.spacing(context, mobile: 20)),
-
-                // Progress Section
                 Row(
                   children: [
                     Text(
@@ -168,10 +161,7 @@ class ProjectCard extends StatelessWidget {
                     ),
                   ],
                 ),
-
                 SizedBox(height: Responsive.spacing(context, mobile: 8)),
-
-                // Progress Bar
                 Container(
                   height: Responsive.size(context, mobile: 6),
                   decoration: BoxDecoration(
@@ -195,10 +185,7 @@ class ProjectCard extends StatelessWidget {
                     ),
                   ),
                 ),
-
                 SizedBox(height: Responsive.spacing(context, mobile: 20)),
-
-                // Details Section
                 Row(
                   children: [
                     Icon(
@@ -219,9 +206,7 @@ class ProjectCard extends StatelessWidget {
                     ),
                   ],
                 ),
-
                 SizedBox(height: Responsive.spacing(context, mobile: 8)),
-
                 Row(
                   children: [
                     Icon(
@@ -239,10 +224,7 @@ class ProjectCard extends StatelessWidget {
                     ),
                   ],
                 ),
-
                 SizedBox(height: Responsive.spacing(context, mobile: 20)),
-
-                // Footer Section
                 Row(
                   children: [
                     Container(
@@ -278,6 +260,54 @@ class ProjectCard extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+  @override
+  Widget build(BuildContext context) {
+    if (onEdit == null && onDelete == null) {
+      return _buildCardContent(context);
+    }
+    return Slidable(
+      key: ValueKey(title),
+      endActionPane: ActionPane(
+        motion: const DrawerMotion(),
+        extentRatio: 0.3,
+        children: [
+          if (onEdit != null)
+            SlidableAction(
+              onPressed: (_) => onEdit!(),
+              backgroundColor: AppColor.primaryColor,
+              foregroundColor: Colors.white,
+              icon: Icons.edit,
+              label: 'Edit',
+              borderRadius: BorderRadius.only(
+                topRight: Radius.circular(
+                  Responsive.borderRadius(context, mobile: 12),
+                ),
+                bottomRight: Radius.circular(
+                  Responsive.borderRadius(context, mobile: 12),
+                ),
+              ),
+            ),
+          if (onDelete != null)
+            SlidableAction(
+              onPressed: (_) => onDelete!(),
+              backgroundColor: AppColor.errorColor,
+              foregroundColor: Colors.white,
+              icon: Icons.delete,
+              label: 'Delete',
+              borderRadius: BorderRadius.only(
+                topRight: Radius.circular(
+                  Responsive.borderRadius(context, mobile: 12),
+                ),
+                bottomRight: Radius.circular(
+                  Responsive.borderRadius(context, mobile: 12),
+                ),
+              ),
+            ),
+        ],
+      ),
+      child: _buildCardContent(context),
     );
   }
 }

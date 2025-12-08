@@ -6,19 +6,14 @@ import 'package:junior/data/Models/project_model.dart';
 import 'package:junior/core/services/pdf_service.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:open_file/open_file.dart';
-
 class ShareDialog extends StatefulWidget {
   final ProjectModel project;
-
   const ShareDialog({super.key, required this.project});
-
   @override
   State<ShareDialog> createState() => _ShareDialogState();
 }
-
 class _ShareDialogState extends State<ShareDialog> {
   bool _isGeneratingPDF = false;
-
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -32,7 +27,6 @@ class _ShareDialogState extends State<ShareDialog> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Header
             Row(
               children: [
                 Container(
@@ -79,10 +73,7 @@ class _ShareDialogState extends State<ShareDialog> {
                 ),
               ],
             ),
-
             const SizedBox(height: 24),
-
-            // Share Options
             _buildShareOption(
               icon: Icons.picture_as_pdf_outlined,
               title: 'Share as PDF',
@@ -90,28 +81,21 @@ class _ShareDialogState extends State<ShareDialog> {
               onTap: _shareAsPDF,
               isLoading: _isGeneratingPDF,
             ),
-
             const SizedBox(height: 12),
-
             _buildShareOption(
               icon: Icons.text_snippet_outlined,
               title: 'Share as Text',
               subtitle: 'Share project information as text',
               onTap: _shareAsText,
             ),
-
             const SizedBox(height: 12),
-
             _buildShareOption(
               icon: Icons.link_outlined,
               title: 'Copy Project Link',
               subtitle: 'Copy a shareable link to clipboard',
               onTap: _copyProjectLink,
             ),
-
             const SizedBox(height: 24),
-
-            // Cancel Button
             SizedBox(
               width: double.infinity,
               child: OutlinedButton(
@@ -132,7 +116,6 @@ class _ShareDialogState extends State<ShareDialog> {
       ),
     );
   }
-
   Widget _buildShareOption({
     required IconData icon,
     required String title,
@@ -211,18 +194,13 @@ class _ShareDialogState extends State<ShareDialog> {
       ),
     );
   }
-
   Future<void> _shareAsPDF() async {
     if (!mounted) return;
-
     setState(() {
       _isGeneratingPDF = true;
     });
-
     try {
       print('Starting PDF generation...');
-
-      // إنشاء PDF مع timeout
       final file = await PDFService.generateProjectPDF(widget.project).timeout(
         const Duration(seconds: 30),
         onTimeout: () {
@@ -231,32 +209,21 @@ class _ShareDialogState extends State<ShareDialog> {
         },
       );
       print('PDF generation result: ${file != null ? 'Success' : 'Failed'}');
-
       if (!mounted) return;
-
       if (file != null) {
         print('PDF file created at: ${file.path}');
         print('File exists: ${await file.exists()}');
         print('File size: ${await file.length()} bytes');
-
-        // مشاركة الملف - تحسينات للأجهزة المحمولة
         try {
           print('Attempting to share PDF file...');
-
-          // التحقق من وجود الملف قبل المشاركة
           if (!await file.exists()) {
             throw Exception('PDF file does not exist at path: ${file.path}');
           }
-
-          // التحقق من حجم الملف
           final fileSize = await file.length();
           if (fileSize == 0) {
             throw Exception('PDF file is empty');
           }
-
           print('PDF file exists and size is: $fileSize bytes');
-
-          // محاولة المشاركة باستخدام shareXFiles (الأفضل للأجهزة المحمولة)
           await Share.shareXFiles(
             [XFile(file.path, mimeType: 'application/pdf')],
             text: 'Project Details: ${widget.project.title}',
@@ -266,7 +233,6 @@ class _ShareDialogState extends State<ShareDialog> {
         } catch (shareError) {
           print('ShareXFiles error: $shareError');
           try {
-            // محاولة مشاركة بديلة باستخدام Share.share
             print('Trying alternative share method...');
             await Share.share(
               'Project Details: ${widget.project.title}\n\nFile saved at: ${file.path}',
@@ -275,7 +241,6 @@ class _ShareDialogState extends State<ShareDialog> {
             print('PDF shared successfully with Share.share');
           } catch (alternativeError) {
             print('Alternative share error: $alternativeError');
-            // محاولة فتح الملف باستخدام open_file
             try {
               print('Trying to open file with open_file...');
               final result = await OpenFile.open(file.path);
@@ -286,32 +251,35 @@ class _ShareDialogState extends State<ShareDialog> {
                   'PDF opened successfully in default app',
                   snackPosition: SnackPosition.BOTTOM,
                   backgroundColor: AppColor.successColor,
-                  colorText: Colors.white,
+                  colorText: AppColor.white,
+                  borderRadius: 12,
+                  margin: const EdgeInsets.all(16),
                 );
               } else {
                 throw Exception('Failed to open file: ${result.message}');
               }
             } catch (openError) {
               print('Open file error: $openError');
-              // عرض رسالة للمستخدم مع مسار الملف ونسخ المسار
-              // لكن فقط إذا كان الملف موجوداً
               if (await file.exists()) {
                 Get.snackbar(
                   'PDF Generated Successfully!',
                   'PDF saved at: ${file.path}\n\nTap to copy path',
                   snackPosition: SnackPosition.BOTTOM,
                   backgroundColor: AppColor.successColor,
-                  colorText: Colors.white,
+                  colorText: AppColor.white,
                   duration: const Duration(seconds: 8),
+                  borderRadius: 12,
+                  margin: const EdgeInsets.all(16),
                   onTap: (snack) {
-                    // نسخ مسار الملف للحافظة
                     Clipboard.setData(ClipboardData(text: file.path));
                     Get.snackbar(
                       'Path Copied',
                       'File path copied to clipboard',
                       snackPosition: SnackPosition.BOTTOM,
                       backgroundColor: AppColor.primaryColor,
-                      colorText: Colors.white,
+                      colorText: AppColor.white,
+                      borderRadius: 12,
+                      margin: const EdgeInsets.all(16),
                     );
                   },
                 );
@@ -321,20 +289,20 @@ class _ShareDialogState extends State<ShareDialog> {
             }
           }
         }
-
         if (mounted) {
           setState(() {
             _isGeneratingPDF = false;
           });
         }
-
         Get.back();
         Get.snackbar(
           'Success',
           'Project PDF generated and shared successfully!',
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: AppColor.successColor,
-          colorText: Colors.white,
+          colorText: AppColor.white,
+          borderRadius: 12,
+          margin: const EdgeInsets.all(16),
         );
       } else {
         throw Exception('Failed to generate PDF - file is null');
@@ -342,13 +310,11 @@ class _ShareDialogState extends State<ShareDialog> {
     } catch (e, stackTrace) {
       print('Error in _shareAsPDF: $e');
       print('Stack trace: $stackTrace');
-
       if (mounted) {
         setState(() {
           _isGeneratingPDF = false;
         });
       }
-
       String errorMessage = 'Failed to generate PDF';
       if (e.toString().contains('TimeoutException')) {
         errorMessage = 'PDF generation timed out. Please try again.';
@@ -357,14 +323,15 @@ class _ShareDialogState extends State<ShareDialog> {
       } else {
         errorMessage = 'Failed to generate PDF: ${e.toString()}';
       }
-
       Get.snackbar(
         'Error',
         errorMessage,
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: AppColor.errorColor,
-        colorText: Colors.white,
+        colorText: AppColor.white,
         duration: const Duration(seconds: 5),
+        borderRadius: 12,
+        margin: const EdgeInsets.all(16),
       );
     } finally {
       if (mounted) {
@@ -374,55 +341,42 @@ class _ShareDialogState extends State<ShareDialog> {
       }
     }
   }
-
   Future<void> _shareAsText() async {
     final text = _generateProjectText();
-
     await Share.share(
       text,
       subject: 'Project Details - ${widget.project.title}',
     );
-
     Get.back();
   }
-
   Future<void> _copyProjectLink() async {
-    // في التطبيق الحقيقي، سيكون هذا رابط فعلي للمشروع
     final projectLink = 'https://projecthub.app/project/${widget.project.id}';
-
-    // نسخ الرابط للحافظة
-    // await Clipboard.setData(ClipboardData(text: projectLink));
-
     Get.back();
     Get.snackbar(
       'Copied',
       'Project link copied to clipboard: $projectLink',
       snackPosition: SnackPosition.BOTTOM,
       backgroundColor: AppColor.primaryColor,
-      colorText: Colors.white,
+      colorText: AppColor.white,
+      borderRadius: 12,
+      margin: const EdgeInsets.all(16),
     );
   }
-
   String _generateProjectText() {
     return '''
 Project Details Report
 =====================
-
 Project Name: ${widget.project.title}
 Company: ${widget.project.company}
 Status: ${widget.project.status}
 Progress: ${(widget.project.progress * 100).round()}%
-
 Description:
 ${widget.project.description}
-
 Timeline:
 Start Date: ${widget.project.startDate}
 End Date: ${widget.project.endDate}
-
 Team:
 Total Members: ${widget.project.teamMembers}
-
 Generated on: ${DateTime.now().toString().split(' ')[0]}
 Generated by: ProjectHub
 ''';

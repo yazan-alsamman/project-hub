@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:junior/controller/onBoarding_controller.dart';
+import 'package:junior/controller/auth/onBoarding_controller.dart';
 import 'package:junior/core/constant/color.dart';
-
 class CustomButtonOnBoarding extends GetView<OnBoardingControllerImp> {
   const CustomButtonOnBoarding({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Container(

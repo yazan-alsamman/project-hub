@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:junior/core/constant/color.dart';
-
 class LanguagePicker extends StatelessWidget {
   final String? selectedLanguage;
   final Function(String) onLanguageSelected;
-
   const LanguagePicker({
     super.key,
     this.selectedLanguage,
     required this.onLanguageSelected,
   });
-
-  // List of world languages with flags
   final List<Map<String, String>> languages = const [
     {'code': 'en', 'name': 'English', 'flag': '🇬🇧'},
     {'code': 'ar', 'name': 'العربية', 'flag': '🇸🇦'},
@@ -80,7 +76,6 @@ class LanguagePicker extends StatelessWidget {
     {'code': 'is', 'name': 'Íslenska', 'flag': '🇮🇸'},
     {'code': 'fo', 'name': 'Føroyskt', 'flag': '🇫🇴'},
   ];
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -116,7 +111,6 @@ class LanguagePicker extends StatelessWidget {
       ),
     );
   }
-
   void _showLanguagePicker(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -132,7 +126,6 @@ class LanguagePicker extends StatelessWidget {
         ),
         child: Column(
           children: [
-            // Header
             Container(
               padding: EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -159,15 +152,12 @@ class LanguagePicker extends StatelessWidget {
                 ],
               ),
             ),
-
-            // Language List
             Expanded(
               child: ListView.builder(
                 itemCount: languages.length,
                 itemBuilder: (context, index) {
                   final language = languages[index];
                   final isSelected = selectedLanguage == language['name'];
-
                   return ListTile(
                     leading: Text(
                       language['flag']!,

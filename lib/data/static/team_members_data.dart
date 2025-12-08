@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:junior/core/constant/color.dart';
-
 class TeamMember {
   final String name;
   final String position;
@@ -19,7 +18,7 @@ class TeamMember {
   final String? github;
   final int? completedProjects;
   final double? rating;
-
+  final String? id; // Add ID field for API compatibility
   TeamMember({
     required this.name,
     required this.position,
@@ -38,9 +37,9 @@ class TeamMember {
     this.github,
     this.completedProjects,
     this.rating,
+    this.id,
   });
 }
-
 List<TeamMember> teamMembers = [
   TeamMember(
     name: "John Doe",

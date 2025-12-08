@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:junior/core/constant/color.dart';
-
 class TimezonePicker extends StatelessWidget {
   final String? selectedTimezone;
   final Function(String) onTimezoneSelected;
-
   const TimezonePicker({
     super.key,
     this.selectedTimezone,
     required this.onTimezoneSelected,
   });
-
-  // List of common timezones
   final List<String> timezones = const [
     'UTC',
     'America/New_York',
@@ -36,7 +32,6 @@ class TimezonePicker extends StatelessWidget {
     'Africa/Cairo',
     'Africa/Johannesburg',
   ];
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -72,7 +67,6 @@ class TimezonePicker extends StatelessWidget {
       ),
     );
   }
-
   void _showTimezonePicker(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -88,7 +82,6 @@ class TimezonePicker extends StatelessWidget {
         ),
         child: Column(
           children: [
-            // Header
             Container(
               padding: EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -115,15 +108,12 @@ class TimezonePicker extends StatelessWidget {
                 ],
               ),
             ),
-
-            // Timezone List
             Expanded(
               child: ListView.builder(
                 itemCount: timezones.length,
                 itemBuilder: (context, index) {
                   final timezone = timezones[index];
                   final isSelected = selectedTimezone == timezone;
-
                   return ListTile(
                     title: Text(
                       timezone,

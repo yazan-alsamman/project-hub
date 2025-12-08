@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:junior/core/constant/color.dart';
-
 class MainButton extends StatelessWidget {
   final void Function()? onPressed;
   final String text;
@@ -8,7 +7,6 @@ class MainButton extends StatelessWidget {
   final double? width;
   final double? height;
   final EdgeInsetsGeometry? padding;
-
   const MainButton({
     super.key,
     required this.onPressed,
@@ -18,7 +16,6 @@ class MainButton extends StatelessWidget {
     this.height,
     this.padding,
   });
-
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -36,7 +33,13 @@ class MainButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
         ),
         child: MaterialButton(
-          onPressed: onPressed,
+          onPressed: onPressed != null
+              ? () {
+                  print('🔵 MainButton onPressed called');
+                  debugPrint('🔵 MainButton onPressed called');
+                  onPressed!();
+                }
+              : null,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),

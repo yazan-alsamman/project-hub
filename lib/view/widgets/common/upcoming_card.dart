@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
-
 class UpcomingCard extends StatelessWidget {
   final String title;
   final List<Milestone> milestones;
-
   const UpcomingCard({
     super.key,
     required this.title,
     required this.milestones,
   });
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -28,7 +25,6 @@ class UpcomingCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Title
           Text(
             title,
             style: const TextStyle(
@@ -38,13 +34,10 @@ class UpcomingCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20),
-
-          // Milestones List
           ...milestones.asMap().entries.map((entry) {
             int index = entry.key;
             Milestone milestone = entry.value;
             bool isLast = index == milestones.length - 1;
-
             return Column(
               children: [
                 _buildMilestoneItem(milestone),
@@ -61,13 +54,11 @@ class UpcomingCard extends StatelessWidget {
       ),
     );
   }
-
   Widget _buildMilestoneItem(Milestone milestone) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 12),
       child: Row(
         children: [
-          // Icon
           Container(
             width: 32,
             height: 32,
@@ -78,8 +69,6 @@ class UpcomingCard extends StatelessWidget {
             child: Icon(milestone.icon, color: Colors.white, size: 16),
           ),
           const SizedBox(width: 12),
-
-          // Milestone Info
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -104,8 +93,6 @@ class UpcomingCard extends StatelessWidget {
               ],
             ),
           ),
-
-          // Status Tag
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
@@ -126,7 +113,6 @@ class UpcomingCard extends StatelessWidget {
     );
   }
 }
-
 class Milestone {
   final String name;
   final String date;
@@ -135,7 +121,6 @@ class Milestone {
   final Color iconColor;
   final Color statusColor;
   final Color statusTextColor;
-
   Milestone({
     required this.name,
     required this.date,

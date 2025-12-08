@@ -1,5 +1,4 @@
 import 'package:junior/data/Models/project_model.dart';
-
 class ProjectsData {
   static List<ProjectModel> projects = [
     ProjectModel(
@@ -47,12 +46,10 @@ class ProjectsData {
       status: 'planned',
     ),
   ];
-
   static List<ProjectModel> getProjectsByStatus(String status) {
     if (status == 'All') {
       return projects;
     }
-    // Convert filter status to lowercase to match data
     String lowerStatus = status.toLowerCase();
     return projects.where((project) => project.status == lowerStatus).toList();
   }

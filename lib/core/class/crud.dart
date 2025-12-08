@@ -3,7 +3,6 @@ import 'package:dartz/dartz.dart';
 import 'package:junior/core/class/statusrequest.dart';
 import 'package:junior/core/functions/checkinternet.dart';
 import 'package:http/http.dart' as http;
-
 class Crud {
   Future<Either<StatusRequest, Map>> postData(String linkurl, Map data) async {
     try {
@@ -22,7 +21,6 @@ class Crud {
       return const Left(StatusRequest.serverException);
     }
   }
-
   Future<Either<StatusRequest, Map>> getData(String linkurl) async {
     try {
       if (await checkInternet()) {

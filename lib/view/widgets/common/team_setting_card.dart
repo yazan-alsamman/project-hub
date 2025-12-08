@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:junior/core/constant/color.dart';
-
 class TeamSettingCard extends StatelessWidget {
   final IconData icon;
   final Color iconColor;
   final String title;
   final List<TeamItem> items;
-
   const TeamSettingCard({
     super.key,
     required this.icon,
@@ -14,7 +12,6 @@ class TeamSettingCard extends StatelessWidget {
     required this.title,
     required this.items,
   });
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -36,7 +33,6 @@ class TeamSettingCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Icon and Title Row
           Row(
             children: [
               Icon(icon, color: iconColor, size: 24),
@@ -52,12 +48,9 @@ class TeamSettingCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 16),
-
-          // Setting Options
           ...items.asMap().entries.map((entry) {
             final index = entry.key;
             final item = entry.value;
-
             return Padding(
               padding: EdgeInsets.only(
                 bottom: index == items.length - 1 ? 0 : 12,
@@ -73,7 +66,6 @@ class TeamSettingCard extends StatelessWidget {
       ),
     );
   }
-
   Widget _buildSettingOption({
     required String title,
     required String description,
@@ -120,11 +112,9 @@ class TeamSettingCard extends StatelessWidget {
     );
   }
 }
-
 class TeamItem {
   final String title;
   final String description;
   final VoidCallback? onTap;
-
   TeamItem({required this.title, required this.description, this.onTap});
 }

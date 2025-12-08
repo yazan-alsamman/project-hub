@@ -76,6 +76,9 @@ dependencies:
   
   # Open File
   open_file: ^3.3.2
+  
+  # Swipeable Actions
+  flutter_slidable: ^3.1.1
 
 dev_dependencies:
   flutter_test:

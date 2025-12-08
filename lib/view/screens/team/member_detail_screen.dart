@@ -2,12 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:junior/core/constant/color.dart';
 import 'package:junior/data/static/team_members_data.dart';
 import 'package:junior/view/widgets/common/custom_app_bar.dart';
-
 class MemberDetailScreen extends StatelessWidget {
   final TeamMember member;
-
   const MemberDetailScreen({super.key, required this.member});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,7 +19,6 @@ class MemberDetailScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // Header Section - صورة العضو والمعلومات الأساسية
             Container(
               width: double.infinity,
               decoration: BoxDecoration(
@@ -39,7 +35,6 @@ class MemberDetailScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(24),
                 child: Column(
                   children: [
-                    // صورة العضو
                     Container(
                       width: 120,
                       height: 120,
@@ -62,8 +57,6 @@ class MemberDetailScreen extends StatelessWidget {
                       child: Icon(member.icon, color: Colors.white, size: 60),
                     ),
                     const SizedBox(height: 20),
-
-                    // اسم العضو
                     Text(
                       member.name,
                       style: TextStyle(
@@ -73,8 +66,6 @@ class MemberDetailScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 8),
-
-                    // المنصب
                     Text(
                       member.position,
                       style: TextStyle(
@@ -84,8 +75,6 @@ class MemberDetailScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 12),
-
-                    // الحالة
                     Container(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 16,
@@ -109,14 +98,11 @@ class MemberDetailScreen extends StatelessWidget {
                 ),
               ),
             ),
-
-            // Content Section
             Padding(
               padding: const EdgeInsets.all(20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // معلومات أساسية
                   _buildInfoSection("Basic Information", Icons.info_outline, [
                     if (member.department != null)
                       _buildInfoRow("Department", member.department!),
@@ -127,10 +113,7 @@ class MemberDetailScreen extends StatelessWidget {
                     if (member.rating != null)
                       _buildInfoRow("Rating", "${member.rating}/5.0 ⭐"),
                   ]),
-
                   const SizedBox(height: 24),
-
-                  // معلومات الاتصال
                   _buildInfoSection("Contact Information", Icons.contact_phone, [
                     if (member.email != null)
                       _buildContactRow(Icons.email, "Email", member.email!),
@@ -146,10 +129,7 @@ class MemberDetailScreen extends StatelessWidget {
                     if (member.github != null)
                       _buildContactRow(Icons.code, "GitHub", member.github!),
                   ]),
-
                   const SizedBox(height: 24),
-
-                  // إحصائيات المشاريع
                   _buildInfoSection("Project Statistics", Icons.analytics, [
                     if (member.activeProjects != null)
                       _buildInfoRow(
@@ -162,10 +142,7 @@ class MemberDetailScreen extends StatelessWidget {
                         "${member.completedProjects}",
                       ),
                   ]),
-
                   const SizedBox(height: 24),
-
-                  // السيرة الذاتية
                   if (member.bio != null)
                     _buildInfoSection("About", Icons.person_outline, [
                       Container(
@@ -192,10 +169,7 @@ class MemberDetailScreen extends StatelessWidget {
                         ),
                       ),
                     ]),
-
                   const SizedBox(height: 24),
-
-                  // المهارات
                   if (member.skills != null && member.skills!.isNotEmpty)
                     _buildInfoSection("Skills", Icons.star_outline, [
                       Wrap(
@@ -231,7 +205,6 @@ class MemberDetailScreen extends StatelessWidget {
                             .toList(),
                       ),
                     ]),
-
                   const SizedBox(height: 40),
                 ],
               ),
@@ -241,7 +214,6 @@ class MemberDetailScreen extends StatelessWidget {
       ),
     );
   }
-
   Widget _buildInfoSection(String title, IconData icon, List<Widget> children) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -282,7 +254,6 @@ class MemberDetailScreen extends StatelessWidget {
       ],
     );
   }
-
   Widget _buildInfoRow(String label, String value) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
@@ -314,7 +285,6 @@ class MemberDetailScreen extends StatelessWidget {
       ),
     );
   }
-
   Widget _buildContactRow(IconData icon, String label, String value) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),

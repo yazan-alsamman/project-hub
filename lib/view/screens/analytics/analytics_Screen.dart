@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:junior/controller/customDrawer_controller.dart';
+import 'package:junior/controller/common/customDrawer_controller.dart';
 import 'package:get/get.dart';
 import 'package:junior/core/constant/color.dart';
-import 'package:junior/controller/analytics_controller.dart';
+import 'package:junior/controller/common/analytics_controller.dart';
 import 'package:junior/view/widgets/common/custom_app_bar.dart';
 import 'package:junior/view/widgets/common/custom_drawer.dart';
 import 'package:junior/view/widgets/common/header.dart';
@@ -10,15 +10,12 @@ import 'package:junior/view/widgets/common/analytics_card.dart';
 import 'package:junior/view/widgets/common/project_status_card.dart';
 import 'package:junior/view/widgets/common/productivity_card.dart';
 import 'package:junior/view/widgets/common/upcoming_card.dart';
-
 class AnalyticsScreen extends StatelessWidget {
   const AnalyticsScreen({super.key});
-
   @override
   Widget build(BuildContext context) {
     final CustomDrawerControllerImp customDrawerController =
         Get.find<CustomDrawerControllerImp>();
-
     return Scaffold(
       drawer: CustomDrawer(
         onItemTap: (item) {
@@ -43,8 +40,6 @@ class AnalyticsScreen extends StatelessWidget {
                         haveButton: false,
                       ),
                       const SizedBox(height: 20),
-
-                      // Analytics Cards
                       AnalyticsCard(
                         title: "On-Time Delivery",
                         value: "94%",
@@ -56,7 +51,6 @@ class AnalyticsScreen extends StatelessWidget {
                         ],
                         iconBackgroundColor: const Color(0xFF66BB6A),
                       ),
-
                       AnalyticsCard(
                         title: "Project Completion",
                         value: "87%",
@@ -68,7 +62,6 @@ class AnalyticsScreen extends StatelessWidget {
                         ],
                         iconBackgroundColor: const Color(0xFF42A5F5),
                       ),
-
                       AnalyticsCard(
                         title: "Team Productivity",
                         value: "92%",
@@ -80,7 +73,6 @@ class AnalyticsScreen extends StatelessWidget {
                         ],
                         iconBackgroundColor: const Color(0xFFBA68C8),
                       ),
-
                       AnalyticsCard(
                         title: "Budget Utilization",
                         value: "78%",
@@ -92,7 +84,6 @@ class AnalyticsScreen extends StatelessWidget {
                         ],
                         iconBackgroundColor: const Color(0xFFFFB74D),
                       ),
-
                       AnalyticsCard(
                         title: "Client Satisfaction",
                         value: "96%",
@@ -104,7 +95,6 @@ class AnalyticsScreen extends StatelessWidget {
                         ],
                         iconBackgroundColor: const Color(0xFF81C784),
                       ),
-
                       AnalyticsCard(
                         title: "Code Quality",
                         value: "89%",
@@ -116,10 +106,7 @@ class AnalyticsScreen extends StatelessWidget {
                         ],
                         iconBackgroundColor: const Color(0xFF90A4AE),
                       ),
-
                       const SizedBox(height: 30),
-
-                      // Project Status Card in separate container
                       Container(
                         margin: const EdgeInsets.only(bottom: 20),
                         child: ProjectStatusCard(
@@ -152,10 +139,7 @@ class AnalyticsScreen extends StatelessWidget {
                           ],
                         ),
                       ),
-
                       const SizedBox(height: 20),
-
-                      // Team Productivity Card in separate container
                       Container(
                         margin: const EdgeInsets.only(bottom: 20),
                         child: ProductivityCard(
@@ -184,10 +168,7 @@ class AnalyticsScreen extends StatelessWidget {
                           ],
                         ),
                       ),
-
                       const SizedBox(height: 20),
-
-                      // Upcoming Milestones Card in separate container
                       Container(
                         margin: const EdgeInsets.only(bottom: 20),
                         child: UpcomingCard(

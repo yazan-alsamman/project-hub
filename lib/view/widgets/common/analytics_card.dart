@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 class AnalyticsCard extends StatelessWidget {
   final String title;
   final String value;
@@ -7,7 +6,6 @@ class AnalyticsCard extends StatelessWidget {
   final IconData icon;
   final List<Color> gradientColors;
   final Color iconBackgroundColor;
-
   const AnalyticsCard({
     super.key,
     required this.title,
@@ -17,7 +15,6 @@ class AnalyticsCard extends StatelessWidget {
     required this.gradientColors,
     required this.iconBackgroundColor,
   });
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -40,7 +37,6 @@ class AnalyticsCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          // Left side - Text content
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -74,8 +70,6 @@ class AnalyticsCard extends StatelessWidget {
               ],
             ),
           ),
-
-          // Right side - Icon
           Container(
             width: 48,
             height: 48,

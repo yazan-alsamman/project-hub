@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-
 class ProjectDashboardCard extends StatelessWidget {
   final String title;
   final String value;
   final IconData icon;
   final Color backgroundColor;
   final Color iconBackgroundColor;
-
   const ProjectDashboardCard({
     super.key,
     required this.title,
@@ -15,7 +13,6 @@ class ProjectDashboardCard extends StatelessWidget {
     required this.backgroundColor,
     required this.iconBackgroundColor,
   });
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -33,12 +30,10 @@ class ProjectDashboardCard extends StatelessWidget {
       ),
       child: Stack(
         children: [
-          // Title and Value
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.max,
             children: [
-              // Title
               Text(
                 title,
                 style: const TextStyle(
@@ -48,8 +43,6 @@ class ProjectDashboardCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 8),
-
-              // Value
               Text(
                 value,
                 style: const TextStyle(
@@ -60,8 +53,6 @@ class ProjectDashboardCard extends StatelessWidget {
               ),
             ],
           ),
-
-          // Icon positioned at bottom right
           Positioned(
             top: 0,
             right: 0,

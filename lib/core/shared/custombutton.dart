@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:junior/core/constant/color.dart';
-
 class CustomBotton extends StatelessWidget {
   final String text;
   final void Function()? onPressed;
   const CustomBotton({super.key, required this.text, this.onPressed});
-
   @override
   Widget build(BuildContext context) {
     return Container(

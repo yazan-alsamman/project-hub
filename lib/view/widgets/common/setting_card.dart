@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:junior/core/constant/color.dart';
-
 class SettingCard extends StatelessWidget {
   final IconData icon;
   final Color iconColor;
@@ -9,7 +8,6 @@ class SettingCard extends StatelessWidget {
   final String description;
   final bool value;
   final ValueChanged<bool>? onChanged;
-
   const SettingCard({
     super.key,
     required this.icon,
@@ -20,7 +18,6 @@ class SettingCard extends StatelessWidget {
     this.value = false,
     this.onChanged,
   });
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -42,7 +39,6 @@ class SettingCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Icon and Title Row
           Row(
             children: [
               Icon(icon, color: iconColor, size: 24),
@@ -58,8 +54,6 @@ class SettingCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 16),
-
-          // Setting Option Row
           Row(
             children: [
               Expanded(

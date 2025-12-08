@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:junior/controller/customDrawer_controller.dart';
+import 'package:junior/controller/common/customDrawer_controller.dart';
 import 'package:get/get.dart';
-import 'package:junior/controller/settings_controller.dart';
+import 'package:junior/controller/common/settings_controller.dart';
 import 'package:junior/core/functions/validinput.dart';
 import 'package:junior/view/widgets/common/input_fields.dart';
 import 'package:junior/view/widgets/common/custom_app_bar.dart';
@@ -14,15 +14,12 @@ import 'package:junior/view/widgets/common/setting_card.dart';
 import 'package:junior/view/widgets/common/security_setting_card.dart';
 import 'package:junior/view/widgets/common/team_setting_card.dart';
 import 'package:junior/core/constant/color.dart';
-
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
-
   @override
   Widget build(BuildContext context) {
     final CustomDrawerControllerImp customDrawerController =
         Get.find<CustomDrawerControllerImp>();
-
     return Scaffold(
       drawer: CustomDrawer(
         onItemTap: (item) {
@@ -58,7 +55,6 @@ class SettingsScreen extends StatelessWidget {
                               offset: const Offset(0, 5),
                               spreadRadius: 0,
                             ),
-
                             BoxShadow(
                               color: Colors.black.withOpacity(0.05),
                               blurRadius: 25,
@@ -72,10 +68,8 @@ class SettingsScreen extends StatelessWidget {
                             style: BorderStyle.solid,
                           ),
                         ),
-
                         width: double.infinity,
                         height: 480,
-
                         child: Padding(
                           padding: const EdgeInsets.all(16),
                           child: Align(
@@ -98,8 +92,6 @@ class SettingsScreen extends StatelessWidget {
                                   ],
                                 ),
                                 SizedBox(height: 20),
-
-                                // Company Name Field
                                 Text(
                                   "Company Name",
                                   style: TextStyle(
@@ -175,8 +167,6 @@ class SettingsScreen extends StatelessWidget {
                 ),
               ),
             ),
-
-            // Notification Settings Section
             Padding(
               padding: const EdgeInsets.all(20),
               child: Column(
@@ -203,8 +193,6 @@ class SettingsScreen extends StatelessWidget {
                 ],
               ),
             ),
-
-            // Security Settings Section
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(
@@ -236,8 +224,6 @@ class SettingsScreen extends StatelessWidget {
                 ],
               ),
             ),
-
-            // Team Settings Section
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(

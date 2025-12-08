@@ -6,17 +6,13 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:junior/data/Models/project_model.dart';
 import 'package:junior/data/static/team_members_data.dart';
-
 class PDFService {
   static Future<File?> generateProjectPDF(ProjectModel project) async {
     try {
       debugPrint('=== STARTING PDF GENERATION ===');
       debugPrint('Project: ${project.title}');
       debugPrint('Team members required: ${project.teamMembers}');
-
-      // التحقق من البيانات الفعلية
       debugPrint('Team members length: ${teamMembers.length}');
-
       if (teamMembers.isNotEmpty) {
         debugPrint('First team member: ${teamMembers.first.name}');
         for (int i = 0; i < teamMembers.length && i < 3; i++) {
@@ -27,16 +23,11 @@ class PDFService {
       } else {
         debugPrint('ERROR: teamMembers is empty!');
       }
-
-      // طلب الصلاحيات على Android
       if (Platform.isAndroid) {
         await _requestStoragePermissions();
       }
-
-      // إنشاء PDF
       final pdf = pw.Document();
       debugPrint('PDF document created');
-
       pdf.addPage(
         pw.Page(
           pageFormat: PdfPageFormat.a4,
@@ -45,27 +36,16 @@ class PDFService {
             return pw.Column(
               crossAxisAlignment: pw.CrossAxisAlignment.start,
               children: [
-                // Header Section
                 _buildHeader(project),
                 pw.SizedBox(height: 25),
-
-                // Project Overview
                 _buildProjectOverview(project),
                 pw.SizedBox(height: 20),
-
-                // Progress Section
                 _buildProgressSection(project),
                 pw.SizedBox(height: 20),
-
-                // Project Details
                 _buildProjectDetails(project),
                 pw.SizedBox(height: 20),
-
-                // Team Information
                 _buildTeamInformation(project),
                 pw.SizedBox(height: 20),
-
-                // Footer
                 _buildFooter(),
               ],
             );
@@ -73,22 +53,16 @@ class PDFService {
         ),
       );
       debugPrint('PDF page added');
-
-      // حفظ الملف - استخدام عدة طرق بديلة مع تحسينات للأجهزة المحمولة
       Directory output;
       try {
-        // المحاولة الأولى: مجلد التطبيق (يعمل على جميع الأجهزة)
         output = await getApplicationDocumentsDirectory();
         debugPrint('Using application documents directory: ${output.path}');
-
-        // التأكد من وجود المجلد
         if (!await output.exists()) {
           await output.create(recursive: true);
         }
       } catch (e) {
         debugPrint('Failed to get application documents directory: $e');
         try {
-          // المحاولة الثانية: مجلد التخزين الخارجي (Android)
           if (Platform.isAndroid) {
             final externalDir = await getExternalStorageDirectory();
             if (externalDir != null) {
@@ -103,7 +77,6 @@ class PDFService {
         } catch (e2) {
           debugPrint('Failed to get external storage directory: $e2');
           try {
-            // المحاولة الثالثة: مجلد التحميلات
             if (Platform.isAndroid) {
               final downloadsDir = await getDownloadsDirectory();
               if (downloadsDir != null) {
@@ -117,39 +90,26 @@ class PDFService {
             }
           } catch (e3) {
             debugPrint('Failed to get downloads directory: $e3');
-            // المحاولة الأخيرة: مجلد النظام المؤقت (يعمل دائماً)
             output = Directory.systemTemp;
             debugPrint('Using system temp directory: ${output.path}');
-
-            // التأكد من وجود المجلد المؤقت
             if (!await output.exists()) {
               await output.create(recursive: true);
             }
           }
         }
       }
-
-      // إنشاء اسم ملف آمن ومناسب
       final safeFileName = project.id
           .replaceAll(RegExp(r'[^\w\s-]'), '_')
           .replaceAll(RegExp(r'[-\s]+'), '_');
       final fileName =
           'project_${safeFileName}_${DateTime.now().millisecondsSinceEpoch}.pdf';
       final file = File('${output.path}/$fileName');
-
       debugPrint('Saving PDF to: ${file.path}');
-
-      // حفظ PDF
       final pdfBytes = await pdf.save();
-
-      // كتابة الملف مع التأكد من النجاح
       await file.writeAsBytes(pdfBytes, flush: true);
-
-      // التحقق من وجود الملف وحجمه
       if (await file.exists()) {
         final fileSize = await file.length();
         debugPrint('PDF saved successfully. File size: $fileSize bytes');
-
         return file;
       } else {
         throw Exception('File was not created successfully');
@@ -160,35 +120,22 @@ class PDFService {
       return null;
     }
   }
-
-  // طلب صلاحيات التخزين على Android
   static Future<void> _requestStoragePermissions() async {
     if (!Platform.isAndroid) return;
-
     try {
-      // Android 13+ (API 33+) يحتاج فقط READ_MEDIA_IMAGES/WRITE_EXTERNAL_STORAGE
-      // Android 10-12 (API 29-32) يحتاج WRITE_EXTERNAL_STORAGE
-      // Android 9 وأقل يحتاج WRITE_EXTERNAL_STORAGE
-
-      // طلب الصلاحيات الأساسية
       final status = await Permission.storage.request();
-
       if (status.isGranted) {
         debugPrint('Storage permission granted');
       } else if (status.isPermanentlyDenied) {
         debugPrint('Storage permission permanently denied');
       } else {
         debugPrint('Storage permission denied: $status');
-        // المحاولة مع صلاحيات أخرى
         await Permission.manageExternalStorage.request();
       }
     } catch (e) {
       debugPrint('Error requesting storage permissions: $e');
-      // المتابعة حتى بدون صلاحيات - سنستخدم مجلد التطبيق
     }
   }
-
-  // Header Section
   static pw.Widget _buildHeader(ProjectModel project) {
     return pw.Container(
       padding: const pw.EdgeInsets.all(25),
@@ -281,8 +228,6 @@ class PDFService {
       ),
     );
   }
-
-  // Project Overview Section
   static pw.Widget _buildProjectOverview(ProjectModel project) {
     return pw.Container(
       padding: const pw.EdgeInsets.all(20),
@@ -315,11 +260,8 @@ class PDFService {
       ),
     );
   }
-
-  // Progress Section
   static pw.Widget _buildProgressSection(ProjectModel project) {
     final progress = (project.progress * 100).round();
-
     return pw.Container(
       padding: const pw.EdgeInsets.all(20),
       decoration: pw.BoxDecoration(
@@ -387,8 +329,6 @@ class PDFService {
       ),
     );
   }
-
-  // Project Details Section
   static pw.Widget _buildProjectDetails(ProjectModel project) {
     return pw.Container(
       padding: const pw.EdgeInsets.all(20),
@@ -444,14 +384,10 @@ class PDFService {
       ),
     );
   }
-
-  // Team Information Section
   static pw.Widget _buildTeamInformation(ProjectModel project) {
     debugPrint('=== BUILDING TEAM INFORMATION ===');
     debugPrint('Project: ${project.title}');
     debugPrint('Required team members: ${project.teamMembers}');
-
-    // استخدام البيانات الفعلية من team_members_data.dart
     if (teamMembers.isEmpty) {
       debugPrint('ERROR: teamMembers is empty!');
       return pw.Container(
@@ -481,8 +417,6 @@ class PDFService {
         ),
       );
     }
-
-    // تحويل TeamMember objects إلى Map للاستخدام في PDF
     final List<Map<String, String>> teamMembersList = teamMembers
         .map(
           (member) => {
@@ -493,8 +427,6 @@ class PDFService {
           },
         )
         .toList();
-
-    // الحصول على أعضاء الفريق النشطين
     var activeTeamMembers = teamMembersList
         .where(
           (member) =>
@@ -502,12 +434,9 @@ class PDFService {
         )
         .take(project.teamMembers)
         .toList();
-
-    // إذا لم نجد أعضاء نشطين، نأخذ أي أعضاء
     if (activeTeamMembers.isEmpty) {
       activeTeamMembers = teamMembersList.take(project.teamMembers).toList();
     }
-
     debugPrint('Available team members: ${teamMembersList.length}');
     debugPrint('Active team members found: ${activeTeamMembers.length}');
     for (var member in activeTeamMembers) {
@@ -515,7 +444,6 @@ class PDFService {
         'Team member: ${member['name']} - ${member['position']} - ${member['status']}',
       );
     }
-
     return pw.Container(
       padding: const pw.EdgeInsets.all(20),
       decoration: pw.BoxDecoration(
@@ -535,8 +463,6 @@ class PDFService {
             ),
           ),
           pw.SizedBox(height: 15),
-
-          // إحصائيات الفريق
           pw.Row(
             children: [
               pw.Expanded(
@@ -556,10 +482,7 @@ class PDFService {
               ),
             ],
           ),
-
           pw.SizedBox(height: 20),
-
-          // قائمة أعضاء الفريق
           pw.Text(
             'Team Members Details:',
             style: pw.TextStyle(
@@ -569,13 +492,9 @@ class PDFService {
             ),
           ),
           pw.SizedBox(height: 12),
-
-          // عرض أعضاء الفريق
           ...activeTeamMembers.map(
             (member) => _buildTeamMemberCardFromMap(member),
           ),
-
-          // إذا كان عدد أعضاء الفريق أقل من المطلوب
           if (activeTeamMembers.length < project.teamMembers)
             pw.Container(
               margin: const pw.EdgeInsets.only(top: 10),
@@ -613,8 +532,6 @@ class PDFService {
       ),
     );
   }
-
-  // Detail Item Helper
   static pw.Widget _buildDetailItem(String label, String value, String icon) {
     return pw.Container(
       padding: const pw.EdgeInsets.all(15),
@@ -659,8 +576,6 @@ class PDFService {
       ),
     );
   }
-
-  // Footer Section
   static pw.Widget _buildFooter() {
     return pw.Container(
       padding: const pw.EdgeInsets.all(20),
@@ -711,8 +626,6 @@ class PDFService {
       ),
     );
   }
-
-  // Helper Functions
   static PdfColor _getStatusColor(String status) {
     switch (status.toLowerCase()) {
       case 'active':
@@ -725,13 +638,9 @@ class PDFService {
         return PdfColors.blue600;
     }
   }
-
   static String _calculateDuration(ProjectModel project) {
-    // حساب بسيط للمدة - في التطبيق الحقيقي ستحتاج لتحليل التواريخ
     return '3 months';
   }
-
-  // تحويل الأيقونات إلى نصوص
   static String _getIconText(String icon) {
     switch (icon) {
       case '👥':
@@ -746,8 +655,6 @@ class PDFService {
         return icon;
     }
   }
-
-  // Team Statistics Helper
   static pw.Widget _buildTeamStat(String label, String value, String icon) {
     return pw.Container(
       padding: const pw.EdgeInsets.all(12),
@@ -784,8 +691,6 @@ class PDFService {
       ),
     );
   }
-
-  // Team Member Card from Map
   static pw.Widget _buildTeamMemberCardFromMap(Map<String, String> member) {
     return pw.Container(
       margin: const pw.EdgeInsets.only(bottom: 12),
@@ -797,7 +702,6 @@ class PDFService {
       ),
       child: pw.Row(
         children: [
-          // Avatar/Icon
           pw.Container(
             width: 40,
             height: 40,
@@ -817,8 +721,6 @@ class PDFService {
             ),
           ),
           pw.SizedBox(width: 15),
-
-          // Member Details
           pw.Expanded(
             child: pw.Column(
               crossAxisAlignment: pw.CrossAxisAlignment.start,
@@ -872,8 +774,6 @@ class PDFService {
               ],
             ),
           ),
-
-          // Additional Info
           pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.end,
             children: [

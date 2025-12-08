@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:junior/core/constant/color.dart';
-
 class FilterButton extends StatelessWidget {
   final String text;
   final VoidCallback? onPressed;
@@ -9,7 +8,6 @@ class FilterButton extends StatelessWidget {
   final Color? unselectedColor;
   final Color? selectedTextColor;
   final Color? unselectedTextColor;
-
   const FilterButton({
     super.key,
     required this.text,
@@ -20,14 +18,12 @@ class FilterButton extends StatelessWidget {
     this.selectedTextColor,
     this.unselectedTextColor,
   });
-
   @override
   Widget build(BuildContext context) {
     final selectedColor = this.selectedColor ?? AppColor.primaryColor;
     final unselectedColor = this.unselectedColor ?? AppColor.backgroundColor;
     final selectedTextColor = this.selectedTextColor ?? Colors.white;
     final unselectedTextColor = this.unselectedTextColor ?? AppColor.textColor;
-
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(

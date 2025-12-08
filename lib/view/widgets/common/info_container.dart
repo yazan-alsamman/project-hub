@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:junior/core/constant/color.dart';
 import 'package:junior/core/constant/responsive.dart';
-
 class InformationContainer extends StatelessWidget {
   final String title;
   final String value;
@@ -10,7 +9,6 @@ class InformationContainer extends StatelessWidget {
     required this.title,
     required this.value,
   });
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -21,14 +19,12 @@ class InformationContainer extends StatelessWidget {
           Responsive.borderRadius(context, mobile: 12),
         ),
         boxShadow: [
-          // Shadow رئيسي للانبثاق
           BoxShadow(
             color: Colors.black.withOpacity(0.1),
             blurRadius: 15,
             offset: const Offset(0, 5),
             spreadRadius: 0,
           ),
-          // Shadow إضافي للعمق
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
             blurRadius: 25,
@@ -42,10 +38,8 @@ class InformationContainer extends StatelessWidget {
           style: BorderStyle.solid,
         ),
       ),
-
       width: Responsive.containerWidth(context, mobile: 150),
       height: Responsive.containerHeight(context, mobile: 90),
-
       child: Padding(
         padding: Responsive.padding(context),
         child: Column(

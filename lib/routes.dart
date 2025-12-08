@@ -12,10 +12,18 @@ import 'package:junior/view/screens/projects/project_details_screen.dart';
 import 'package:junior/view/screens/settings/settings.dart';
 import 'package:junior/view/screens/team/team_screen.dart';
 import 'package:junior/view/screens/team/member_detail_screen.dart';
+import 'package:junior/view/screens/team/add_employee_screen.dart';
+import 'package:junior/view/screens/team/edit_employee_screen.dart';
+import 'package:junior/view/screens/Tasks/add_task_screen.dart';
+import 'package:junior/view/screens/Tasks/edit_task_screen.dart';
+import 'package:junior/view/screens/projects/add_project_screen.dart';
+import 'package:junior/view/screens/projects/edit_project_screen.dart';
 import 'package:junior/view/screens/analytics/analytics_Screen.dart';
 import 'package:junior/view/screens/project dashboard/project_dashboard_screen.dart';
+import 'package:junior/view/screens/profile/profile_screen.dart';
+import 'package:junior/view/screens/assignments/assignments_screen.dart';
+import 'package:junior/view/screens/assignments/add_assignment_screen.dart';
 import 'package:junior/data/Models/project_model.dart';
-
 List<GetPage<dynamic>>? routes = [
   GetPage(
     name: "/",
@@ -45,5 +53,35 @@ List<GetPage<dynamic>>? routes = [
       final project = Get.arguments as ProjectModel;
       return ProjectDetailsScreen(project: project);
     },
+  ),
+  GetPage(name: AppRoute.profile, page: () => const ProfileScreen()),
+  GetPage(name: AppRoute.addEmployee, page: () => const AddEmployeeScreen()),
+  GetPage(
+    name: AppRoute.editEmployee,
+    page: () {
+      final employeeId = Get.arguments as String;
+      return EditEmployeeScreen(employeeId: employeeId);
+    },
+  ),
+  GetPage(name: AppRoute.addTask, page: () => const AddTaskScreen()),
+  GetPage(
+    name: AppRoute.editTask,
+    page: () {
+      final taskId = Get.arguments as String;
+      return EditTaskScreen(taskId: taskId);
+    },
+  ),
+  GetPage(name: AppRoute.addProject, page: () => const AddProjectScreen()),
+  GetPage(
+    name: AppRoute.editProject,
+    page: () {
+      final projectId = Get.arguments as String;
+      return EditProjectScreen(projectId: projectId);
+    },
+  ),
+  GetPage(name: AppRoute.assignments, page: () => const AssignmentsScreen()),
+  GetPage(
+    name: AppRoute.addAssignment,
+    page: () => const AddAssignmentScreen(),
   ),
 ];

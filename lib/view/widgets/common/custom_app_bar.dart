@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:junior/core/constant/color.dart';
 import 'package:junior/core/constant/responsive.dart';
-import 'package:junior/controller/customAppBar_controller.dart';
-
+import 'package:junior/core/constant/routes.dart';
+import 'package:junior/controller/common/customAppBar_controller.dart';
+import 'package:junior/data/repository/auth_repository.dart';
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String? title;
   final bool showSearch;
@@ -11,7 +12,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool showUserProfile;
   final bool showHamburgerMenu;
   final bool showBackButton;
-
   const CustomAppBar({
     super.key,
     this.title,
@@ -21,19 +21,15 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.showHamburgerMenu = true,
     this.showBackButton = false,
   });
-
   @override
   Widget build(BuildContext context) {
-    // Try to get controller safely
     try {
       final controller = Get.find<CustomappbarControllerImp>();
       return _buildAppBarWithController(controller);
     } catch (e) {
-      // If controller not found, return simple AppBar
       return AppBar(backgroundColor: Colors.white, elevation: 0);
     }
   }
-
   Widget _buildAppBarWithController(CustomappbarControllerImp controller) {
     return Builder(
       builder: (context) => AppBar(
@@ -42,7 +38,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         automaticallyImplyLeading: false,
         title: Row(
           children: [
-            // Back Button
             if (showBackButton) ...[
               IconButton(
                 onPressed: () => Get.back(),
@@ -65,31 +60,22 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   ),
                 ),
             ] else ...[
-              // Hamburger Menu
               if (showHamburgerMenu) ...[
                 _buildHamburgerMenu(context),
                 SizedBox(width: Responsive.spacing(context, mobile: 16)),
               ],
-
-              // Search Bar
               if (showSearch) ...[
                 Expanded(child: _buildSearchBar(context, controller)),
                 SizedBox(width: Responsive.spacing(context, mobile: 12)),
               ],
-
-              // Search Icon (hidden on mobile)
               if (showSearch && !Responsive.isMobile(context)) ...[
                 _buildSearchIcon(context),
                 SizedBox(width: Responsive.spacing(context, mobile: 16)),
               ],
-
-              // Notification Bell
               if (showNotifications) ...[
                 _buildNotificationBell(context, controller),
                 SizedBox(width: Responsive.spacing(context, mobile: 16)),
               ],
-
-              // User Profile
               if (showUserProfile) ...[_buildUserProfile(context, controller)],
             ],
           ],
@@ -97,12 +83,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
     );
   }
-
   Widget _buildHamburgerMenu(BuildContext context) {
     return Builder(
       builder: (builderContext) => GestureDetector(
         onTap: () {
-          // Default action - open drawer
           Scaffold.of(builderContext).openDrawer();
         },
         child: Container(
@@ -116,7 +100,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
     );
   }
-
   Widget _buildSearchBar(
     BuildContext context,
     CustomappbarControllerImp controller,
@@ -153,11 +136,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
     );
   }
-
   Widget _buildSearchIcon(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // Search icon action (optional)
       },
       child: Container(
         padding: EdgeInsets.all(Responsive.spacing(context, mobile: 8)),
@@ -169,7 +150,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
     );
   }
-
   Widget _buildNotificationBell(
     BuildContext context,
     CustomappbarControllerImp controller,
@@ -210,7 +190,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
     );
   }
-
   Widget _buildUserProfile(
     BuildContext context,
     CustomappbarControllerImp controller,
@@ -252,7 +231,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
     );
   }
-
   void _showNotificationDialog(int count) {
     Get.dialog(
       AlertDialog(
@@ -272,36 +250,83 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
     );
   }
-
   void _showUserMenu() {
     Get.dialog(
       AlertDialog(
-        title: const Text('User Menu'),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: const Text(
+          'User Menu',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: AppColor.textColor,
+          ),
+        ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             ListTile(
-              leading: const Icon(Icons.person),
+              leading: const Icon(Icons.person, color: AppColor.primaryColor),
               title: const Text('Profile'),
               onTap: () {
                 Get.back();
-                // Navigate to profile
+                Get.toNamed(AppRoute.profile);
               },
             ),
+            const Divider(height: 1),
             ListTile(
-              leading: const Icon(Icons.settings),
+              leading: const Icon(
+                Icons.settings,
+                color: AppColor.secondaryColor,
+              ),
               title: const Text('Settings'),
               onTap: () {
                 Get.back();
-                // Navigate to settings
+                Get.toNamed(AppRoute.settings);
               },
             ),
+            const Divider(height: 1),
             ListTile(
-              leading: const Icon(Icons.logout),
-              title: const Text('Logout'),
-              onTap: () {
+              leading: const Icon(Icons.logout, color: AppColor.errorColor),
+              title: const Text(
+                'Logout',
+                style: TextStyle(color: AppColor.errorColor),
+              ),
+              onTap: () async {
                 Get.back();
-                // Handle logout
+                final shouldLogout = await Get.dialog<bool>(
+                  AlertDialog(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    title: const Text('Logout'),
+                    content: const Text('Are you sure you want to logout?'),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Get.back(result: false),
+                        child: const Text('Cancel'),
+                      ),
+                      TextButton(
+                        onPressed: () => Get.back(result: true),
+                        style: TextButton.styleFrom(
+                          foregroundColor: AppColor.errorColor,
+                        ),
+                        child: const Text('Logout'),
+                      ),
+                    ],
+                  ),
+                );
+                if (shouldLogout == true) {
+                  final authRepository = AuthRepository();
+                  final result = await authRepository.logout();
+                  result.fold(
+                    (error) {
+                      Get.offAllNamed(AppRoute.login);
+                    },
+                    (success) {
+                      Get.offAllNamed(AppRoute.login);
+                    },
+                  );
+                }
               },
             ),
           ],
@@ -309,7 +334,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
     );
   }
-
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }

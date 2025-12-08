@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
-
 class ProductivityCard extends StatelessWidget {
   final String title;
   final List<TeamMember> teamMembers;
-
   const ProductivityCard({
     super.key,
     required this.title,
     required this.teamMembers,
   });
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -28,7 +25,6 @@ class ProductivityCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Title
           Text(
             title,
             style: const TextStyle(
@@ -38,20 +34,16 @@ class ProductivityCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20),
-
-          // Team Members List
           ...teamMembers.map((member) => _buildMemberItem(member)).toList(),
         ],
       ),
     );
   }
-
   Widget _buildMemberItem(TeamMember member) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       child: Column(
         children: [
-          // Member Name and Score
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -74,8 +66,6 @@ class ProductivityCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 8),
-
-          // Progress Bar with Gradient
           Container(
             width: double.infinity,
             height: 6,
@@ -109,12 +99,10 @@ class ProductivityCard extends StatelessWidget {
     );
   }
 }
-
 class TeamMember {
   final String name;
   final String score;
   final double percentage;
-
   TeamMember({
     required this.name,
     required this.score,

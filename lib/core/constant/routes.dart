@@ -1,5 +1,4 @@
 class AppRoute {
-  //auth
   static const String login = "/login";
   static const String onBoarding = "/onBoarding";
   static const String signUp = "/SignUp";
@@ -10,19 +9,22 @@ class AppRoute {
   static const String successResetPassword = "/successresetpassword";
   static const String checkemail = "/checkemail";
   static const String verifyCodeSignUp = "/verifycodesignup";
-  //team
   static const String homepage = "/homepage";
   static const String team = "/team";
   static const String memberDetail = "/member-detail";
-  //tasks
+  static const String addEmployee = "/add-employee";
+  static const String editEmployee = "/edit-employee";
   static const String tasks = "/tasks";
-  //settings
+  static const String addTask = "/add-task";
+  static const String editTask = "/edit-task";
   static const String settings = "/settings";
-  //projects
   static const String projects = "/projects";
   static const String projectDetails = "/project-details";
-  //analytics
+  static const String addProject = "/add-project";
+  static const String editProject = "/edit-project";
   static const String analytics = "/analytics";
-  //project dashboard
   static const String projectDashboard = "/project-dashboard";
+  static const String profile = "/profile";
+  static const String assignments = "/assignments";
+  static const String addAssignment = "/add-assignment";
 }

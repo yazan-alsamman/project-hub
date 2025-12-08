@@ -1,18 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:junior/data/Models/project_model.dart';
-
 class ProjectDashboardInformationCard extends StatelessWidget {
   final ProjectModel project;
   final VoidCallback? onTap;
   final VoidCallback? onMoreTap;
-
   const ProjectDashboardInformationCard({
     super.key,
     required this.project,
     this.onTap,
     this.onMoreTap,
   });
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -38,10 +35,8 @@ class ProjectDashboardInformationCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Top Section: Icon, Title, Company, More Button
                 Row(
                   children: [
-                    // Project Icon
                     Container(
                       width: 40,
                       height: 40,
@@ -56,8 +51,6 @@ class ProjectDashboardInformationCard extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 12),
-
-                    // Title and Company
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -81,8 +74,6 @@ class ProjectDashboardInformationCard extends StatelessWidget {
                         ],
                       ),
                     ),
-
-                    // More Button
                     GestureDetector(
                       onTap: onMoreTap,
                       child: const Icon(
@@ -93,15 +84,9 @@ class ProjectDashboardInformationCard extends StatelessWidget {
                     ),
                   ],
                 ),
-
                 const SizedBox(height: 16),
-
-                // Status Section
                 _buildStatusChip(project.status),
-
                 const SizedBox(height: 12),
-
-                // Progress Section
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -119,10 +104,7 @@ class ProjectDashboardInformationCard extends StatelessWidget {
                     ),
                   ],
                 ),
-
                 const SizedBox(height: 8),
-
-                // Progress Bar
                 Container(
                   height: 6,
                   decoration: BoxDecoration(
@@ -144,14 +126,10 @@ class ProjectDashboardInformationCard extends StatelessWidget {
                     ),
                   ),
                 ),
-
                 const SizedBox(height: 16),
-
-                // Bottom Section: Deadline and Team Members
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    // Deadline
                     Row(
                       children: [
                         const Icon(
@@ -169,8 +147,6 @@ class ProjectDashboardInformationCard extends StatelessWidget {
                         ),
                       ],
                     ),
-
-                    // Team Members
                     Row(children: _buildTeamAvatars()),
                   ],
                 ),
@@ -181,12 +157,10 @@ class ProjectDashboardInformationCard extends StatelessWidget {
       ),
     );
   }
-
   Widget _buildStatusChip(String status) {
     Color backgroundColor;
     Color textColor;
     IconData icon;
-
     switch (status.toLowerCase()) {
       case 'active':
         backgroundColor = const Color(0xFFFFF3CD);
@@ -209,7 +183,6 @@ class ProjectDashboardInformationCard extends StatelessWidget {
         icon = Icons.warning;
         break;
     }
-
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
@@ -233,7 +206,6 @@ class ProjectDashboardInformationCard extends StatelessWidget {
       ),
     );
   }
-
   String _getStatusText(String status) {
     switch (status.toLowerCase()) {
       case 'active':
@@ -246,7 +218,6 @@ class ProjectDashboardInformationCard extends StatelessWidget {
         return "Pending";
     }
   }
-
   String _formatDate(String dateString) {
     try {
       final date = DateTime.parse(dateString);
@@ -269,15 +240,10 @@ class ProjectDashboardInformationCard extends StatelessWidget {
       return dateString; // Return original string if parsing fails
     }
   }
-
   List<Widget> _buildTeamAvatars() {
     final avatars = <Widget>[];
     final teamMembersCount = project.teamMembers;
-
-    // Create mock team member names for display
     final mockNames = ['JD', 'SM', 'AR', 'KL', 'RR', 'MC'];
-
-    // Show up to 3 team members
     for (int i = 0; i < teamMembersCount && i < 3; i++) {
       avatars.add(
         Container(
@@ -301,8 +267,6 @@ class ProjectDashboardInformationCard extends StatelessWidget {
         ),
       );
     }
-
-    // Add "+X" or "-X" indicator if there are more members
     if (teamMembersCount > 3) {
       avatars.add(
         Container(
@@ -348,7 +312,6 @@ class ProjectDashboardInformationCard extends StatelessWidget {
         ),
       );
     }
-
     return avatars;
   }
 }

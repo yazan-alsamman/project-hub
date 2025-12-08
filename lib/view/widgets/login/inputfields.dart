@@ -1,29 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:junior/core/constant/color.dart';
-import 'package:junior/controller/login_controller.dart';
-
+import 'package:junior/controller/auth/login_controller.dart';
 class InputFields extends StatelessWidget {
   final TextEditingController emailController;
   final TextEditingController passwordController;
   final String hintText;
-
   const InputFields({
     super.key,
     required this.emailController,
     required this.passwordController,
     required this.hintText,
   });
-
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final isTablet = screenWidth > 600;
-
     return GetBuilder<LoginControllerImpl>(
       builder: (controller) => Column(
         children: [
-          // Email Field
           Container(
             decoration: BoxDecoration(
               color: AppColor.backgroundColor,
@@ -31,7 +26,7 @@ class InputFields extends StatelessWidget {
             ),
             child: TextFormField(
               controller: emailController,
-              keyboardType: TextInputType.emailAddress,
+              keyboardType: TextInputType.text,
               style: TextStyle(fontSize: isTablet ? 16 : 14),
               decoration: InputDecoration(
                 hintText: hintText,
@@ -40,7 +35,7 @@ class InputFields extends StatelessWidget {
                   fontSize: isTablet ? 16 : 14,
                 ),
                 prefixIcon: Icon(
-                  Icons.mail_outline,
+                  Icons.person_outline,
                   color: AppColor.textSecondaryColor,
                   size: isTablet ? 24 : 20,
                 ),
@@ -53,8 +48,6 @@ class InputFields extends StatelessWidget {
             ),
           ),
           SizedBox(height: isTablet ? 20 : 16),
-
-          // Password Field
           Container(
             decoration: BoxDecoration(
               color: AppColor.backgroundColor,

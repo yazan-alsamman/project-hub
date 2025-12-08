@@ -1,22 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:junior/controller/customDrawer_controller.dart';
+import 'package:junior/controller/common/customDrawer_controller.dart';
 import 'package:junior/core/constant/color.dart';
 import 'package:junior/data/Models/project_model.dart';
 import 'package:junior/view/widgets/common/custom_app_bar.dart';
 import 'package:junior/view/widgets/common/custom_drawer.dart';
 import 'package:junior/view/widgets/common/share_dialog.dart';
-
 class ProjectDetailsScreen extends StatelessWidget {
   final ProjectModel project;
-
   const ProjectDetailsScreen({super.key, required this.project});
-
   @override
   Widget build(BuildContext context) {
     final CustomDrawerControllerImp customDrawerController =
         Get.find<CustomDrawerControllerImp>();
-
     return Scaffold(
       drawer: CustomDrawer(
         onItemTap: (item) {
@@ -27,7 +23,6 @@ class ProjectDetailsScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // Header Section
             Container(
               color: AppColor.backgroundColor,
               child: Padding(
@@ -35,7 +30,6 @@ class ProjectDetailsScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Back Button and Title
                     Row(
                       children: [
                         IconButton(
@@ -79,14 +73,11 @@ class ProjectDetailsScreen extends StatelessWidget {
                 ),
               ),
             ),
-
-            // Project Content
             Padding(
               padding: const EdgeInsets.all(20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Project Header Card
                   Container(
                     padding: const EdgeInsets.all(24),
                     decoration: BoxDecoration(
@@ -156,10 +147,7 @@ class ProjectDetailsScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-
                   const SizedBox(height: 24),
-
-                  // Progress Section
                   Container(
                     padding: const EdgeInsets.all(24),
                     decoration: BoxDecoration(
@@ -245,10 +233,7 @@ class ProjectDetailsScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-
                   const SizedBox(height: 24),
-
-                  // Project Information
                   Container(
                     padding: const EdgeInsets.all(24),
                     decoration: BoxDecoration(
@@ -306,10 +291,7 @@ class ProjectDetailsScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-
                   const SizedBox(height: 24),
-
-                  // Team Members Section
                   Container(
                     padding: const EdgeInsets.all(24),
                     decoration: BoxDecoration(
@@ -339,10 +321,7 @@ class ProjectDetailsScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-
                   const SizedBox(height: 24),
-
-                  // Action Buttons
                   Row(
                     children: [
                       Expanded(
@@ -352,6 +331,10 @@ class ProjectDetailsScreen extends StatelessWidget {
                               'Edit Project',
                               'Edit functionality will be implemented',
                               snackPosition: SnackPosition.BOTTOM,
+                              backgroundColor: AppColor.primaryColor,
+                              colorText: AppColor.white,
+                              borderRadius: 12,
+                              margin: const EdgeInsets.all(16),
                             );
                           },
                           icon: const Icon(Icons.edit_outlined),
@@ -386,7 +369,6 @@ class ProjectDetailsScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-
                   const SizedBox(height: 40),
                 ],
               ),
@@ -396,7 +378,6 @@ class ProjectDetailsScreen extends StatelessWidget {
       ),
     );
   }
-
   Widget _buildInfoRow(IconData icon, String label, String value) {
     return Row(
       children: [
@@ -425,7 +406,6 @@ class ProjectDetailsScreen extends StatelessWidget {
       ],
     );
   }
-
   Widget _buildTeamMembersList() {
     return Column(
       children: List.generate(
@@ -481,7 +461,6 @@ class ProjectDetailsScreen extends StatelessWidget {
       ),
     );
   }
-
   Color _getStatusColor() {
     switch (project.status.toLowerCase()) {
       case 'active':
@@ -494,7 +473,6 @@ class ProjectDetailsScreen extends StatelessWidget {
         return const Color(0xFF2196F3);
     }
   }
-
   Color _getStatusBackgroundColor() {
     switch (project.status.toLowerCase()) {
       case 'active':
@@ -507,7 +485,6 @@ class ProjectDetailsScreen extends StatelessWidget {
         return const Color(0xFFE0F2F7);
     }
   }
-
   Color _getRandomColor(int index) {
     final colors = [
       const Color(0xFF4285F4),
@@ -519,7 +496,6 @@ class ProjectDetailsScreen extends StatelessWidget {
     ];
     return colors[index % colors.length];
   }
-
   String _getRandomRole(int index) {
     final roles = [
       'Project Manager',
@@ -533,12 +509,9 @@ class ProjectDetailsScreen extends StatelessWidget {
     ];
     return roles[index % roles.length];
   }
-
   String _calculateDuration() {
-    // Simple duration calculation - in real app, you'd parse the dates
     return '3 months';
   }
-
   void _showShareDialog(BuildContext context) {
     showDialog(
       context: context,

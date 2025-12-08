@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:junior/controller/onBoarding_controller.dart';
+import 'package:junior/controller/auth/onBoarding_controller.dart';
 import 'package:junior/core/constant/color.dart';
 import 'package:junior/data/static/onBoarding_data.dart';
-
 class CustomDotControllerOnBoarding extends StatelessWidget {
   const CustomDotControllerOnBoarding({super.key});
-
   @override
   Widget build(BuildContext context) {
     return GetBuilder<OnBoardingControllerImp>(

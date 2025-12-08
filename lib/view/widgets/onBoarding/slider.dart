@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:junior/controller/onBoarding_controller.dart';
+import 'package:junior/controller/auth/onBoarding_controller.dart';
 import 'package:junior/core/constant/color.dart';
 import 'package:junior/data/static/onBoarding_data.dart';
-
 class CustomSliderOnBoarding extends GetView<OnBoardingControllerImp> {
   const CustomSliderOnBoarding({super.key});
-
   @override
   Widget build(BuildContext context) {
     return PageView.builder(
@@ -17,8 +15,6 @@ class CustomSliderOnBoarding extends GetView<OnBoardingControllerImp> {
       itemCount: onBoardingList.length,
       itemBuilder: (context, i) => Column(
         children: [
-          /* 
-          */
           const SizedBox(height: 80),
           Image.asset(
             onBoardingList[i].image!,

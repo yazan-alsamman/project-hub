@@ -1,14 +1,11 @@
 class AppImageAsset {
   static const rootImages = "assets/images";
   static const rootLotile = "assets/lottie";
-
   static const String logo = "$rootImages/logo.png";
   static const String onBoardingImageOne = "$rootImages/onBoardingImageOne.png";
   static const String onBoardingImageTwo = "$rootImages/onBoardingImageTwo.png";
   static const String onBoardingImageThree = "$rootImages/onBoardingImageThree.png";
-
   static const String avatar = "$rootImages/avatar.png";
-
   static const String loading = "$rootLotile/loading.json";
   static const String serverfailure = "$rootLotile/serverfailure.json";
   static const String nodata = "$rootLotile/nodata.json";

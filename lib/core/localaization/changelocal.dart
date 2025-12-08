@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:junior/core/services/services.dart';
-
 class LocalController extends GetxController {
   Locale? language;
   Myservices myservices = Get.find();
-
   changeLang(String codelang) {
     Locale locale = Locale(codelang);
     myservices.sharedPreferences.setString("lang", codelang);
     Get.updateLocale(locale);
   }
-
   @override
   void onInit() {
     String? sharedPrefLang = myservices.sharedPreferences.getString("lang");

@@ -1,19 +1,9 @@
-/// API Response Model
-///
-/// Standard response structure from the API
-/// {
-///   "success": true,
-///   "message": "Operation successful",
-///   "data": {...},
-///   "errors": null
-/// }
 class ApiResponseModel<T> {
   final bool success;
   final String message;
   final T? data;
   final List<String>? errors;
   final Map<String, dynamic>? meta;
-
   ApiResponseModel({
     required this.success,
     required this.message,
@@ -21,7 +11,6 @@ class ApiResponseModel<T> {
     this.errors,
     this.meta,
   });
-
   factory ApiResponseModel.fromJson(
     Map<String, dynamic> json,
     T Function(dynamic)? fromJsonT,
@@ -36,7 +25,6 @@ class ApiResponseModel<T> {
       meta: json['meta'] as Map<String, dynamic>?,
     );
   }
-
   Map<String, dynamic> toJson() {
     return {
       'success': success,
@@ -47,28 +35,12 @@ class ApiResponseModel<T> {
     };
   }
 }
-
-/// Paginated Response Model
-///
-/// For responses that include pagination
-/// {
-///   "success": true,
-///   "message": "Data retrieved successfully",
-///   "data": [...],
-///   "pagination": {
-///     "current_page": 1,
-///     "per_page": 10,
-///     "total": 100,
-///     "last_page": 10
-///   }
-/// }
 class PaginatedResponseModel<T> {
   final bool success;
   final String message;
   final List<T> data;
   final PaginationModel? pagination;
   final List<String>? errors;
-
   PaginatedResponseModel({
     required this.success,
     required this.message,
@@ -76,7 +48,6 @@ class PaginatedResponseModel<T> {
     this.pagination,
     this.errors,
   });
-
   factory PaginatedResponseModel.fromJson(
     Map<String, dynamic> json,
     T Function(Map<String, dynamic>) fromJsonT,
@@ -95,7 +66,6 @@ class PaginatedResponseModel<T> {
       errors: json['errors'] != null ? List<String>.from(json['errors']) : null,
     );
   }
-
   Map<String, dynamic> toJson() {
     return {
       'success': success,
@@ -106,8 +76,6 @@ class PaginatedResponseModel<T> {
     };
   }
 }
-
-/// Pagination Model
 class PaginationModel {
   final int currentPage;
   final int perPage;
@@ -115,7 +83,6 @@ class PaginationModel {
   final int lastPage;
   final int? from;
   final int? to;
-
   PaginationModel({
     required this.currentPage,
     required this.perPage,
@@ -124,7 +91,6 @@ class PaginationModel {
     this.from,
     this.to,
   });
-
   factory PaginationModel.fromJson(Map<String, dynamic> json) {
     return PaginationModel(
       currentPage: json['current_page'] ?? 1,
@@ -135,7 +101,6 @@ class PaginationModel {
       to: json['to'] as int?,
     );
   }
-
   Map<String, dynamic> toJson() {
     return {
       'current_page': currentPage,
@@ -146,7 +111,6 @@ class PaginationModel {
       'to': to,
     };
   }
-
   bool get hasNextPage => currentPage < lastPage;
   bool get hasPreviousPage => currentPage > 1;
 }

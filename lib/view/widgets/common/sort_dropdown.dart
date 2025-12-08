@@ -1,21 +1,16 @@
 import 'package:flutter/material.dart';
-
 enum SortOption { deadline, projectStatus }
-
 class SortDropdown extends StatefulWidget {
   final SortOption selectedOption;
   final ValueChanged<SortOption> onChanged;
-
   const SortDropdown({
     super.key,
     required this.selectedOption,
     required this.onChanged,
   });
-
   @override
   State<SortDropdown> createState() => _SortDropdownState();
 }
-
 class _SortDropdownState extends State<SortDropdown> {
   @override
   Widget build(BuildContext context) {

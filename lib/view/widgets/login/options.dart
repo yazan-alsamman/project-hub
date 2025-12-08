@@ -2,20 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:junior/core/constant/color.dart';
 import 'package:junior/core/constant/routes.dart';
-import 'package:junior/controller/login_controller.dart';
-
+import 'package:junior/controller/auth/login_controller.dart';
 class Options extends StatelessWidget {
   const Options({super.key});
-
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final isTablet = screenWidth > 600;
-
     return GetBuilder<LoginControllerImpl>(
       builder: (controller) => Column(
         children: [
-          // Remember Me
           Row(
             children: [
               Checkbox(
@@ -38,8 +34,6 @@ class Options extends StatelessWidget {
             ],
           ),
           SizedBox(height: isTablet ? 16 : 12),
-
-          // Forgot Password
           Align(
             alignment: Alignment.centerRight,
             child: TextButton(

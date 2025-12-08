@@ -2,29 +2,23 @@ import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:junior/data/Models/project_model.dart';
 import 'package:junior/data/static/projects_data.dart';
 import 'package:junior/view/widgets/common/sort_dropdown.dart';
-
 abstract class ProjectDashboardController extends GetxController {
   List<ProjectModel> get projects;
   SortOption get selectedSortOption;
   void changeSortOption(SortOption option);
 }
-
 class ProjectDashboardControllerImp extends ProjectDashboardController {
   List<ProjectModel> _projects = [];
   SortOption _selectedSortOption = SortOption.deadline;
-
   @override
   List<ProjectModel> get projects => _projects;
-
   @override
   SortOption get selectedSortOption => _selectedSortOption;
-
   @override
   void onInit() {
     super.onInit();
     _loadProjects();
   }
-
   void _loadProjects() {
     _projects = ProjectsData.projects;
     print('Loaded ${_projects.length} projects');
@@ -33,14 +27,12 @@ class ProjectDashboardControllerImp extends ProjectDashboardController {
     }
     _sortProjects();
   }
-
   @override
   void changeSortOption(SortOption option) {
     _selectedSortOption = option;
     _sortProjects();
     update();
   }
-
   void _sortProjects() {
     switch (_selectedSortOption) {
       case SortOption.deadline:

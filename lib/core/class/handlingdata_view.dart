@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:junior/core/class/statusrequest.dart';
 import 'package:junior/core/constant/imageassets.dart';
-
 class HandlingDataView extends StatelessWidget {
   final StatusRequest statusRequest;
   final Widget widget;
@@ -11,7 +10,6 @@ class HandlingDataView extends StatelessWidget {
     required this.statusRequest,
     required this.widget,
   });
-
   @override
   Widget build(BuildContext context) {
     switch (statusRequest) {

@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:junior/controller/customDrawer_controller.dart';
+import 'package:junior/controller/common/customDrawer_controller.dart';
 import 'package:get/get.dart';
-import 'package:junior/controller/project_dashboard_controller.dart';
+import 'package:junior/controller/project/project_dashboard_controller.dart';
 import 'package:junior/core/constant/color.dart';
 import 'package:junior/core/constant/responsive.dart';
 import 'package:junior/core/constant/routes.dart';
-
 import 'package:junior/view/widgets/common/custom_app_bar.dart';
 import 'package:junior/view/widgets/common/custom_drawer.dart';
 import 'package:junior/view/widgets/common/project_dashboard_card.dart';
 import 'package:junior/view/widgets/common/project_dashboard_information_card.dart';
 import 'package:junior/view/widgets/common/sort_dropdown.dart';
-
 class ProjectDashboardScreen extends StatelessWidget {
   const ProjectDashboardScreen({super.key});
-
   void _showProjectOptions(BuildContext context, project) {
     showModalBottomSheet(
       context: context,
@@ -29,7 +26,6 @@ class ProjectDashboardScreen extends StatelessWidget {
                 title: const Text('Edit Project'),
                 onTap: () {
                   Navigator.pop(context);
-                  // Handle edit
                 },
               ),
               ListTile(
@@ -37,7 +33,6 @@ class ProjectDashboardScreen extends StatelessWidget {
                 title: const Text('Share Project'),
                 onTap: () {
                   Navigator.pop(context);
-                  // Handle share
                 },
               ),
               ListTile(
@@ -48,7 +43,6 @@ class ProjectDashboardScreen extends StatelessWidget {
                 ),
                 onTap: () {
                   Navigator.pop(context);
-                  // Handle delete
                 },
               ),
             ],
@@ -57,12 +51,10 @@ class ProjectDashboardScreen extends StatelessWidget {
       },
     );
   }
-
   @override
   Widget build(BuildContext context) {
     final CustomDrawerControllerImp customDrawerController =
         Get.find<CustomDrawerControllerImp>();
-
     return Scaffold(
       drawer: CustomDrawer(
         onItemTap: (item) {
@@ -81,7 +73,6 @@ class ProjectDashboardScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Header with Sort Dropdown
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -107,8 +98,6 @@ class ProjectDashboardScreen extends StatelessWidget {
                         ],
                       ),
                       SizedBox(height: Responsive.spacing(context, mobile: 20)),
-
-                      // Dashboard Cards - Grid Layout for Tablets
                       Responsive.isTablet(context) ||
                               Responsive.isDesktop(context)
                           ? GridView.count(
@@ -157,7 +146,6 @@ class ProjectDashboardScreen extends StatelessWidget {
                             )
                           : Column(
                               children: [
-                                // Active Projects Card
                                 SizedBox(
                                   width: double.infinity,
                                   height: Responsive.containerHeight(
@@ -174,15 +162,12 @@ class ProjectDashboardScreen extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-
                                 SizedBox(
                                   height: Responsive.spacing(
                                     context,
                                     mobile: 16,
                                   ),
                                 ),
-
-                                // Total Tasks Card
                                 SizedBox(
                                   width: double.infinity,
                                   height: Responsive.containerHeight(
@@ -199,15 +184,12 @@ class ProjectDashboardScreen extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-
                                 SizedBox(
                                   height: Responsive.spacing(
                                     context,
                                     mobile: 16,
                                   ),
                                 ),
-
-                                // Team Members Card
                                 SizedBox(
                                   width: double.infinity,
                                   height: Responsive.containerHeight(
@@ -224,15 +206,12 @@ class ProjectDashboardScreen extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-
                                 SizedBox(
                                   height: Responsive.spacing(
                                     context,
                                     mobile: 16,
                                   ),
                                 ),
-
-                                // Completion Rate Card
                                 SizedBox(
                                   width: double.infinity,
                                   height: Responsive.containerHeight(
@@ -251,10 +230,7 @@ class ProjectDashboardScreen extends StatelessWidget {
                                 ),
                               ],
                             ),
-
                       SizedBox(height: Responsive.spacing(context, mobile: 24)),
-
-                      // Projects List
                       Text(
                         "Project Details",
                         style: TextStyle(
@@ -264,8 +240,6 @@ class ProjectDashboardScreen extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: Responsive.spacing(context, mobile: 16)),
-
-                      // Project Information Cards
                       ...controller.projects
                           .map(
                             (project) => ProjectDashboardInformationCard(
@@ -277,7 +251,6 @@ class ProjectDashboardScreen extends StatelessWidget {
                                 );
                               },
                               onMoreTap: () {
-                                // Handle more options
                                 _showProjectOptions(context, project);
                               },
                             ),

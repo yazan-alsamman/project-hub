@@ -2,9 +2,10 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:junior/core/services/services.dart';
+
 class ApiConstant {
   static const String _customBaseUrl =
-      ''; // فارغ للـ Emulator، أو ضع IP للجهاز الحقيقي
+      'http://72.62.52.238:5020'; // السيرفر الجديد
   static const String _baseUrlKey = 'api_base_url';
   static String get baseUrl {
     if (_customBaseUrl.isNotEmpty) {
@@ -16,13 +17,13 @@ class ApiConstant {
       if (customUrl != null && customUrl.isNotEmpty) {
         return customUrl;
       }
-    } catch (e) {
-    }
+    } catch (e) {}
     if (Platform.isAndroid) {
       return 'http://10.0.2.2:5000';
     }
     return 'http://localhost:5000';
   }
+
   static Future<void> setBaseUrl(String url) async {
     try {
       final Myservices services = Get.find();
@@ -32,6 +33,7 @@ class ApiConstant {
       debugPrint('❌ Failed to save base URL: $e');
     }
   }
+
   static String? getCustomBaseUrl() {
     try {
       final Myservices services = Get.find();
@@ -40,6 +42,7 @@ class ApiConstant {
       return null;
     }
   }
+
   static const Duration connectTimeout = Duration(seconds: 30);
   static const Duration receiveTimeout = Duration(seconds: 30);
   static const String contentType = 'application/json';
@@ -105,9 +108,11 @@ class ApiConstant {
     });
     return result;
   }
+
   static String buildUrl(String endpoint) {
     return '$baseUrl$endpoint';
   }
+
   static String buildUrlWithParams(
     String endpoint,
     Map<String, String> params,

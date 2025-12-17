@@ -348,6 +348,14 @@ class ProjectsRepository {
     int safeDelay = 7,
   }) async {
     debugPrint('🔵 ProjectsRepository: Creating project...');
+    debugPrint('✅ CompanyId received: $companyId');
+    if (companyId.isEmpty) {
+      debugPrint('🔴 ERROR: CompanyId is empty!');
+      return Left({
+        'error': StatusRequest.serverFailure,
+        'message': 'Company ID is required',
+      });
+    }
     try {
       final body = <String, dynamic>{
         'companyId': companyId,

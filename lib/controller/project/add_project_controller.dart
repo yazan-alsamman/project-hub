@@ -90,6 +90,29 @@ class AddProjectControllerImp extends AddProjectController {
     statusRequest = StatusRequest.loading;
     update();
     try {
+      // جلب companyId من AuthService في كل مرة قبل الإرسال
+      String? finalCompanyId = companyId;
+      if (finalCompanyId == null || finalCompanyId.isEmpty) {
+        finalCompanyId = await _authService.getCompanyId();
+        debugPrint('🔵 Got companyId from AuthService: $finalCompanyId');
+      }
+      // التحقق من وجود companyId قبل الإرسال
+      if (finalCompanyId == null || finalCompanyId.isEmpty) {
+        Get.snackbar(
+          'Error',
+          'Company ID not found. Please login again.',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: AppColor.errorColor,
+          colorText: AppColor.white,
+          borderRadius: 12,
+          margin: const EdgeInsets.all(16),
+        );
+        isLoading = false;
+        statusRequest = StatusRequest.serverFailure;
+        update();
+        return;
+      }
+      debugPrint('✅ Sending companyId with request: $finalCompanyId');
       final safeDelay = int.tryParse(safeDelayController.text.trim()) ?? 7;
       String formattedStartDate = startDateController.text.trim();
       if (!formattedStartDate.contains('T')) {
@@ -102,7 +125,7 @@ class AddProjectControllerImp extends AddProjectController {
       }
       String backendStatus = _mapStatusToBackend(selectedStatus ?? 'pending');
       final result = await _projectsRepository.createProject(
-        companyId: companyId ?? '',
+        companyId: finalCompanyId,
         clientId: selectedClientId ?? '',
         name: nameController.text.trim(),
         code: codeController.text.trim(),

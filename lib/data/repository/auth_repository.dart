@@ -33,24 +33,63 @@ class AuthRepository {
           try {
             debugPrint('🟢 AuthRepository login response received');
             debugPrint('Response keys: ${response.keys}');
+            debugPrint('Full response: $response');
+            print('🔵 ====== FULL LOGIN RESPONSE ======');
+            print(response);
+            print('🔵 ====== END RESPONSE ======');
             if (response['success'] == true && response['data'] != null) {
               final data = response['data'] as Map<String, dynamic>;
               debugPrint('Data keys: ${data.keys}');
+              debugPrint('Full data: $data');
               if (data['user'] == null) {
                 debugPrint('🔴 User data is null');
                 return const Left(StatusRequest.serverFailure);
               }
               final user = data['user'] as Map<String, dynamic>;
               debugPrint('User keys: ${user.keys}');
+              debugPrint('Full user: $user');
               String? companyId;
+              
+              // البحث عن companyId في أماكن مختلفة
+              // 1. في user['companyId']
               if (user['companyId'] != null) {
+                debugPrint('🔵 Found companyId in user.companyId: ${user['companyId']}');
                 if (user['companyId'] is Map<String, dynamic>) {
                   companyId = (user['companyId'] as Map<String, dynamic>)['_id']
                       ?.toString();
+                  debugPrint('🔵 Extracted companyId from object: $companyId');
                 } else {
                   companyId = user['companyId']?.toString();
+                  debugPrint('🔵 Using companyId as string: $companyId');
                 }
               }
+              
+              // 2. في data['companyId']
+              if ((companyId == null || companyId.isEmpty) && data['companyId'] != null) {
+                debugPrint('🔵 Found companyId in data.companyId: ${data['companyId']}');
+                if (data['companyId'] is Map<String, dynamic>) {
+                  companyId = (data['companyId'] as Map<String, dynamic>)['_id']
+                      ?.toString();
+                  debugPrint('🔵 Extracted companyId from data object: $companyId');
+                } else {
+                  companyId = data['companyId']?.toString();
+                  debugPrint('🔵 Using companyId from data as string: $companyId');
+                }
+              }
+              
+              // 3. في response['companyId']
+              if ((companyId == null || companyId.isEmpty) && response['companyId'] != null) {
+                debugPrint('🔵 Found companyId in response.companyId: ${response['companyId']}');
+                if (response['companyId'] is Map<String, dynamic>) {
+                  companyId = (response['companyId'] as Map<String, dynamic>)['_id']
+                      ?.toString();
+                  debugPrint('🔵 Extracted companyId from response object: $companyId');
+                } else {
+                  companyId = response['companyId']?.toString();
+                  debugPrint('🔵 Using companyId from response as string: $companyId');
+                }
+              }
+              
               await _authService.saveAuthData(
                 token: data['token']?.toString() ?? '',
                 refreshToken: data['refreshToken']?.toString() ?? '',
@@ -65,9 +104,24 @@ class AuthRepository {
               );
               if (companyId != null && companyId.isNotEmpty) {
                 await _authService.saveCompanyId(companyId);
-                debugPrint('✅ CompanyId saved: $companyId');
+                debugPrint('✅ CompanyId saved successfully: $companyId');
+                // التحقق من أن companyId تم حفظه بشكل صحيح
+                final savedCompanyId = await _authService.getCompanyId();
+                debugPrint('✅ Verified saved companyId: $savedCompanyId');
+                print('🔵 ====== COMPANY ID VERIFICATION ======');
+                print('Saved: $companyId');
+                print('Retrieved: $savedCompanyId');
+                print('Match: ${companyId == savedCompanyId}');
+                print('🔵 ====== END VERIFICATION ======');
               } else {
-                debugPrint('⚠️ CompanyId not found in user data');
+                debugPrint('⚠️ CompanyId not found in any location');
+                debugPrint('⚠️ Searched in: user.companyId, data.companyId, response.companyId');
+                print('🔴 ====== COMPANY ID NOT FOUND ======');
+                print('Response structure:');
+                print('  - response keys: ${response.keys}');
+                print('  - data keys: ${data.keys}');
+                print('  - user keys: ${user.keys}');
+                print('🔴 ====== END NOT FOUND ======');
               }
               debugPrint('✅ Authentication data saved successfully');
               return Right(response);

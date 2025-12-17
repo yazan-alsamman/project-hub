@@ -93,10 +93,16 @@ class TeamControllerImp extends TeamController {
     debugPrint('🔵 Loading team members...');
     debugPrint('Page: $_currentPage, Limit: $_limit');
     debugPrint('CompanyId: $companyId, Status: $status');
-    String? finalCompanyId = companyId;
+    // جلب companyId من AuthService في كل مرة قبل الإرسال
+    String? finalCompanyId = await _authService.getCompanyId();
+    debugPrint('🔵 Got companyId from AuthService: $finalCompanyId');
+    // التحقق من وجود companyId قبل الإرسال
     if (finalCompanyId == null || finalCompanyId.isEmpty) {
-      finalCompanyId = await _authService.getCompanyId();
-      debugPrint('🔵 Using companyId from AuthService: $finalCompanyId');
+      debugPrint('🔴 CompanyId is required but not found');
+      _isLoading = false;
+      _statusRequest = StatusRequest.serverFailure;
+      update();
+      return;
     }
     final result = await _teamRepository.getEmployees(
       page: _currentPage,

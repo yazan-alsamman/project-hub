@@ -175,6 +175,14 @@ class TeamRepository {
     bool isActive = true,
   }) async {
     debugPrint('🔵 TeamRepository: Creating employee with user...');
+    debugPrint('✅ CompanyId received: $companyId');
+    if (companyId.isEmpty) {
+      debugPrint('🔴 ERROR: CompanyId is empty!');
+      return Left({
+        'error': StatusRequest.serverFailure,
+        'message': 'Company ID is required',
+      });
+    }
     try {
       String formattedHireDate = hireDate;
       if (!hireDate.contains('T')) {

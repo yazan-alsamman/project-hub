@@ -191,13 +191,28 @@ class AddEmployeeControllerImp extends AddEmployeeController {
       }
       final positionId = selectedPositionId ?? positions.first.id;
       final departmentId = selectedDepartmentId ?? departments.first.id;
-      String? finalCompanyId = selectedCompanyId;
+      // جلب companyId من AuthService في كل مرة قبل الإرسال
+      String? finalCompanyId = await authService.getCompanyId();
+      debugPrint('🔵 Got companyId from AuthService: $finalCompanyId');
+      // التأكد من وجود companyId قبل الإرسال
       if (finalCompanyId == null || finalCompanyId.isEmpty) {
-        finalCompanyId = await authService.getCompanyId();
-        debugPrint('🔵 Using companyId from AuthService: $finalCompanyId');
+        Get.snackbar(
+          'Error',
+          'Company ID not found. Please login again.',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: AppColor.errorColor,
+          colorText: AppColor.white,
+          borderRadius: 12,
+          margin: const EdgeInsets.all(16),
+        );
+        isLoading = false;
+        statusRequest = StatusRequest.serverFailure;
+        update();
+        return;
       }
+      debugPrint('✅ Sending companyId with request: $finalCompanyId');
       final result = await _teamRepository.createEmployeeWithUser(
-        companyId: finalCompanyId ?? '',
+        companyId: finalCompanyId,
         employeeCode: employeeCodeController.text.trim(),
         position: positionId, // Use position ID
         department: departmentId, // Use department ID

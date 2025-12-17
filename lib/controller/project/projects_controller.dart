@@ -24,7 +24,6 @@ class ProjectsControllerImp extends ProjectsController {
   int _currentPage = 1;
   final int _limit = 10;
   bool _hasMore = true;
-  static const String defaultCompanyId = '692ed9260c8dff1984315781';
   @override
   List<ProjectModel> get projects => _projects;
   @override
@@ -62,6 +61,14 @@ class ProjectsControllerImp extends ProjectsController {
     }
     update();
     String? companyId = await _getCompanyId();
+    // التحقق من وجود companyId قبل الإرسال
+    if (companyId == null || companyId.isEmpty) {
+      debugPrint('🔴 CompanyId is required but not found');
+      _isLoading = false;
+      _statusRequest = StatusRequest.serverFailure;
+      update();
+      return;
+    }
     debugPrint('🔵 Loading projects...');
     debugPrint('Page: $_currentPage, Limit: $_limit');
     debugPrint('CompanyId: $companyId, Filter: $_selectedFilter');
@@ -138,11 +145,13 @@ class ProjectsControllerImp extends ProjectsController {
   Future<String?> _getCompanyId() async {
     try {
       final authService = AuthService();
+      // جلب companyId من AuthService في كل مرة
       final savedCompanyId = await authService.getCompanyId();
       if (savedCompanyId != null && savedCompanyId.isNotEmpty) {
         debugPrint('✅ Got companyId from AuthService: $savedCompanyId');
         return savedCompanyId;
       }
+      // محاولة جلب companyId من بيانات employee
       final userId = await authService.getUserId();
       if (userId != null && userId.isNotEmpty) {
         debugPrint(
@@ -179,8 +188,8 @@ class ProjectsControllerImp extends ProjectsController {
     } catch (e) {
       debugPrint('⚠️ Could not get companyId: $e');
     }
-    debugPrint('⚠️ Using default companyId: $defaultCompanyId');
-    return defaultCompanyId;
+    debugPrint('🔴 CompanyId not found. User must login again.');
+    return null;
   }
   @override
   void selectFilter(String filter) {

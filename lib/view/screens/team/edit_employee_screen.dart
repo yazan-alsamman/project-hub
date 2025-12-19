@@ -26,8 +26,9 @@ class _EditEmployeeScreenState extends State<EditEmployeeScreen> {
     Get.put(EditEmployeeControllerImp(employeeId: widget.employeeId));
     return Scaffold(
       appBar: const CustomAppBar(title: 'Edit Employee', showBackButton: true),
-      body: GetBuilder<EditEmployeeControllerImp>(
-        builder: (controller) {
+      body: SafeArea(
+        child: GetBuilder<EditEmployeeControllerImp>(
+          builder: (controller) {
           if (controller.errorMessage != null &&
               controller.errorMessage != _previousErrorMessage) {
             _previousErrorMessage = controller.errorMessage;
@@ -263,6 +264,7 @@ class _EditEmployeeScreenState extends State<EditEmployeeScreen> {
             ),
           );
         },
+        ),
       ),
     );
   }

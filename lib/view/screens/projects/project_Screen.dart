@@ -90,7 +90,8 @@ class ProjectScreen extends StatelessWidget {
         },
       ),
       appBar: const CustomAppBar(),
-      body: GetBuilder<ProjectsControllerImp>(
+      body: SafeArea(
+        child: GetBuilder<ProjectsControllerImp>(
         init: Get.find<ProjectsControllerImp>(),
         builder: (controller) {
           if (controller.statusRequest == StatusRequest.loading &&
@@ -357,6 +358,7 @@ class ProjectScreen extends StatelessWidget {
             ),
           );
         },
+      ),
       ),
     );
   }

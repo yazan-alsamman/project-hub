@@ -68,7 +68,12 @@ class AddEmployeeControllerImp extends AddEmployeeController {
         },
         (rolesList) {
           debugPrint('✅ Loaded ${rolesList.length} roles');
-          roles = rolesList;
+          // Filter out "client" role (case-insensitive)
+          roles = rolesList.where((role) {
+            final roleNameLower = role.name.toLowerCase();
+            return roleNameLower != 'client';
+          }).toList();
+          debugPrint('✅ Filtered roles: ${roles.length} roles (excluding client)');
           if (roles.isNotEmpty && selectedRoleId == null) {
             selectedRoleId = roles.first.id;
           }

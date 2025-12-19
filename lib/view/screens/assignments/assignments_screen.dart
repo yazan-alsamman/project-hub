@@ -41,8 +41,9 @@ class _AssignmentsScreenState extends State<AssignmentsScreen>
         },
       ),
       appBar: const CustomAppBar(),
-      body: Column(
-        children: [
+      body: SafeArea(
+        child: Column(
+          children: [
           Container(
             color: AppColor.backgroundColor,
             child: TabBar(
@@ -68,6 +69,7 @@ class _AssignmentsScreenState extends State<AssignmentsScreen>
             ),
           ),
         ],
+        ),
       ),
     );
   }

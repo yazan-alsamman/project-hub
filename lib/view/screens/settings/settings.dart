@@ -27,7 +27,8 @@ class SettingsScreen extends StatelessWidget {
         },
       ),
       appBar: const CustomAppBar(),
-      body: SingleChildScrollView(
+      body: SafeArea(
+        child: SingleChildScrollView(
         child: Column(
           children: [
             Container(
@@ -273,6 +274,7 @@ class SettingsScreen extends StatelessWidget {
             ),
           ],
         ),
+      ),
       ),
     );
   }

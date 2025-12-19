@@ -26,7 +26,8 @@ class TasksScreen extends StatelessWidget {
         },
       ),
       appBar: const CustomAppBar(),
-      body: GetBuilder<TasksControllerImp>(
+      body: SafeArea(
+        child: GetBuilder<TasksControllerImp>(
         init: Get.find<TasksControllerImp>(),
         builder: (controller) {
           if (controller.statusRequest == StatusRequest.loading &&
@@ -278,6 +279,7 @@ class TasksScreen extends StatelessWidget {
             ),
           );
         },
+      ),
       ),
     );
   }

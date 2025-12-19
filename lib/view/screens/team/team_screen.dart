@@ -31,7 +31,8 @@ class _TeamScreenState extends State<TeamScreen> {
         },
       ),
       appBar: const CustomAppBar(),
-      body: GetBuilder<TeamControllerImp>(
+      body: SafeArea(
+        child: GetBuilder<TeamControllerImp>(
         init: Get.find<TeamControllerImp>(),
         builder: (controller) {
           debugPrint(
@@ -337,6 +338,7 @@ class _TeamScreenState extends State<TeamScreen> {
             ),
           );
         },
+      ),
       ),
     );
   }

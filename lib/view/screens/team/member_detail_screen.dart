@@ -16,8 +16,9 @@ class MemberDetailScreen extends StatelessWidget {
         showUserProfile: false,
         showHamburgerMenu: false,
       ),
-      body: SingleChildScrollView(
-        child: Column(
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
           children: [
             Container(
               width: double.infinity,
@@ -210,6 +211,7 @@ class MemberDetailScreen extends StatelessWidget {
               ),
             ),
           ],
+        ),
         ),
       ),
     );

@@ -14,8 +14,9 @@ class AddTaskScreen extends StatelessWidget {
     Get.put(AddTaskControllerImp());
     return Scaffold(
       appBar: const CustomAppBar(title: 'Add New Task', showBackButton: true),
-      body: GetBuilder<AddTaskControllerImp>(
-        builder: (controller) => SingleChildScrollView(
+      body: SafeArea(
+        child: GetBuilder<AddTaskControllerImp>(
+          builder: (controller) => SingleChildScrollView(
           child: Padding(
             padding: Responsive.padding(context),
             child: Form(
@@ -92,6 +93,7 @@ class AddTaskScreen extends StatelessWidget {
               ),
             ),
           ),
+        ),
         ),
       ),
     );

@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:junior/core/class/statusrequest.dart';
 import 'package:junior/core/constant/color.dart';
 import 'package:junior/core/constant/routes.dart';
+import 'package:junior/core/services/controllers_initializer.dart';
 import 'package:junior/data/repository/auth_repository.dart';
 abstract class LoginController extends GetxController {
   login();
@@ -94,6 +95,10 @@ class LoginControllerImpl extends LoginController {
         debugPrint('Response: $response');
         statusRequest = StatusRequest.success;
         update();
+        // Initialize all controllers after successful login
+        debugPrint('🔄 Initializing all controllers after login...');
+        ControllersInitializer.initializeControllers();
+        debugPrint('✅ All controllers initialized');
         Get.offNamed(AppRoute.team);
       },
     );

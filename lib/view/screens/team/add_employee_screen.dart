@@ -25,7 +25,8 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
     Get.put(AddEmployeeControllerImp());
     return Scaffold(
       appBar: const CustomAppBar(title: 'Add Employee', showBackButton: true),
-      body: GetBuilder<AddEmployeeControllerImp>(
+      body: SafeArea(
+        child: GetBuilder<AddEmployeeControllerImp>(
         builder: (controller) {
           if (controller.errorMessage != null &&
               controller.errorMessage != _previousErrorMessage) {
@@ -218,6 +219,7 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
             ),
           );
         },
+      ),
       ),
     );
   }

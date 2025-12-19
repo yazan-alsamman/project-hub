@@ -39,7 +39,8 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColor.white,
-      body: Container(
+      body: SafeArea(
+        child: Container(
         width: double.infinity,
         height: double.infinity,
         decoration: const BoxDecoration(
@@ -78,6 +79,7 @@ class _SplashScreenState extends State<SplashScreen> {
             ],
           ),
         ),
+      ),
       ),
     );
   }

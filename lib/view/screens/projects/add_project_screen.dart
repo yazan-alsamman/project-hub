@@ -25,8 +25,9 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
     Get.put(AddProjectControllerImp());
     return Scaffold(
       appBar: const CustomAppBar(title: 'Add Project', showBackButton: true),
-      body: GetBuilder<AddProjectControllerImp>(
-        builder: (controller) {
+      body: SafeArea(
+        child: GetBuilder<AddProjectControllerImp>(
+          builder: (controller) {
           if (controller.errorMessage != null &&
               controller.errorMessage != _previousErrorMessage) {
             _previousErrorMessage = controller.errorMessage;
@@ -185,6 +186,7 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
             ),
           );
         },
+        ),
       ),
     );
   }

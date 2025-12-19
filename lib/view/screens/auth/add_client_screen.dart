@@ -43,8 +43,9 @@ class _AddClientScreenState extends State<AddClientScreen>
     Get.put(AddClientControllerImp());
     return Scaffold(
       appBar: const CustomAppBar(title: 'Clients', showBackButton: true),
-      body: Column(
-        children: [
+      body: SafeArea(
+        child: Column(
+          children: [
           Container(
             color: AppColor.backgroundColor,
             child: TabBar(
@@ -68,6 +69,7 @@ class _AddClientScreenState extends State<AddClientScreen>
             ),
           ),
         ],
+        ),
       ),
     );
   }

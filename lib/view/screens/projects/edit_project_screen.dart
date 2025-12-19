@@ -26,8 +26,9 @@ class _EditProjectScreenState extends State<EditProjectScreen> {
     Get.put(EditProjectControllerImp(projectId: widget.projectId));
     return Scaffold(
       appBar: const CustomAppBar(title: 'Edit Project', showBackButton: true),
-      body: GetBuilder<EditProjectControllerImp>(
-        builder: (controller) {
+      body: SafeArea(
+        child: GetBuilder<EditProjectControllerImp>(
+          builder: (controller) {
           if (controller.errorMessage != null &&
               controller.errorMessage != _previousErrorMessage) {
             _previousErrorMessage = controller.errorMessage;
@@ -247,6 +248,7 @@ class _EditProjectScreenState extends State<EditProjectScreen> {
             ),
           );
         },
+        ),
       ),
     );
   }

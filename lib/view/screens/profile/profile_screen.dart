@@ -21,8 +21,9 @@ class ProfileScreen extends StatelessWidget {
         },
       ),
       appBar: const CustomAppBar(title: 'Profile', showBackButton: true),
-      body: GetBuilder<ProfileController>(
-        builder: (controller) {
+      body: SafeArea(
+        child: GetBuilder<ProfileController>(
+          builder: (controller) {
           if (controller.isLoading) {
             return const Center(
               child: CircularProgressIndicator(color: AppColor.primaryColor),
@@ -198,6 +199,7 @@ class ProfileScreen extends StatelessWidget {
             ),
           );
         },
+        ),
       ),
     );
   }

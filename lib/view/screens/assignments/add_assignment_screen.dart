@@ -14,15 +14,16 @@ class AddAssignmentScreen extends StatelessWidget {
     Get.put(AddAssignmentControllerImp());
     return Scaffold(
       appBar: const CustomAppBar(title: 'Add Assignment', showBackButton: true),
-      body: GetBuilder<AddAssignmentControllerImp>(
-        builder: (controller) => SingleChildScrollView(
-          child: Padding(
-            padding: Responsive.padding(context),
-            child: Form(
-              key: controller.formState,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+      body: SafeArea(
+        child: GetBuilder<AddAssignmentControllerImp>(
+          builder: (controller) => SingleChildScrollView(
+            child: Padding(
+              padding: Responsive.padding(context),
+              child: Form(
+                key: controller.formState,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
                   Header(
                     title: "Add Assignment",
                     subtitle: "Assign tasks to team members",
@@ -93,6 +94,7 @@ class AddAssignmentScreen extends StatelessWidget {
               ),
             ),
           ),
+        ),
         ),
       ),
     );

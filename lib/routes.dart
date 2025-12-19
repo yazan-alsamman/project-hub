@@ -23,6 +23,7 @@ import 'package:junior/view/screens/project dashboard/project_dashboard_screen.d
 import 'package:junior/view/screens/profile/profile_screen.dart';
 import 'package:junior/view/screens/assignments/assignments_screen.dart';
 import 'package:junior/view/screens/assignments/add_assignment_screen.dart';
+import 'package:junior/view/screens/auth/add_client_screen.dart';
 import 'package:junior/data/Models/project_model.dart';
 List<GetPage<dynamic>>? routes = [
   GetPage(
@@ -84,4 +85,5 @@ List<GetPage<dynamic>>? routes = [
     name: AppRoute.addAssignment,
     page: () => const AddAssignmentScreen(),
   ),
+  GetPage(name: AppRoute.addClient, page: () => const AddClientScreen()),
 ];

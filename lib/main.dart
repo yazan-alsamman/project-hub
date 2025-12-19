@@ -15,6 +15,7 @@ import 'package:junior/controller/common/analytics_controller.dart';
 import 'package:junior/controller/project/project_dashboard_controller.dart';
 import 'package:junior/controller/employee/add_employee_controller.dart';
 import 'package:junior/controller/project/add_project_controller.dart';
+import 'package:junior/controller/auth/add_client_controller.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initialServices();
@@ -31,6 +32,7 @@ void main() async {
   Get.put(ProjectDashboardControllerImp(), permanent: true);
   Get.put(AddEmployeeControllerImp(), permanent: true);
   Get.put(AddProjectControllerImp(), permanent: true);
+  Get.put(AddClientControllerImp(), permanent: true);
   runApp(const MyApp());
 }
 class MyApp extends StatefulWidget {

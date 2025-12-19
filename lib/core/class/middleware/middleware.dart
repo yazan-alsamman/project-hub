@@ -21,7 +21,8 @@ class MyMiddleWare extends GetMiddleware {
         route == AppRoute.profile ||
         route == AppRoute.projectDetails ||
         route == AppRoute.assignments ||
-        route == AppRoute.addAssignment) {
+        route == AppRoute.addAssignment ||
+        route == AppRoute.addClient) {
       return null;
     }
     String? onBoardingStatus = myservices.sharedPreferences.getString(

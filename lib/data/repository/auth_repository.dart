@@ -5,6 +5,8 @@ import 'package:junior/core/constant/api_constant.dart';
 import 'package:junior/core/services/api_service.dart';
 import 'package:junior/core/services/auth_service.dart';
 import 'package:junior/data/Models/api_response_model.dart';
+import 'package:junior/data/Models/client_model.dart';
+
 class AuthRepository {
   final ApiService _apiService = ApiService();
   final AuthService _authService = AuthService();
@@ -49,11 +51,13 @@ class AuthRepository {
               debugPrint('User keys: ${user.keys}');
               debugPrint('Full user: $user');
               String? companyId;
-              
+
               // البحث عن companyId في أماكن مختلفة
               // 1. في user['companyId']
               if (user['companyId'] != null) {
-                debugPrint('🔵 Found companyId in user.companyId: ${user['companyId']}');
+                debugPrint(
+                  '🔵 Found companyId in user.companyId: ${user['companyId']}',
+                );
                 if (user['companyId'] is Map<String, dynamic>) {
                   companyId = (user['companyId'] as Map<String, dynamic>)['_id']
                       ?.toString();
@@ -63,33 +67,48 @@ class AuthRepository {
                   debugPrint('🔵 Using companyId as string: $companyId');
                 }
               }
-              
+
               // 2. في data['companyId']
-              if ((companyId == null || companyId.isEmpty) && data['companyId'] != null) {
-                debugPrint('🔵 Found companyId in data.companyId: ${data['companyId']}');
+              if ((companyId == null || companyId.isEmpty) &&
+                  data['companyId'] != null) {
+                debugPrint(
+                  '🔵 Found companyId in data.companyId: ${data['companyId']}',
+                );
                 if (data['companyId'] is Map<String, dynamic>) {
                   companyId = (data['companyId'] as Map<String, dynamic>)['_id']
                       ?.toString();
-                  debugPrint('🔵 Extracted companyId from data object: $companyId');
+                  debugPrint(
+                    '🔵 Extracted companyId from data object: $companyId',
+                  );
                 } else {
                   companyId = data['companyId']?.toString();
-                  debugPrint('🔵 Using companyId from data as string: $companyId');
+                  debugPrint(
+                    '🔵 Using companyId from data as string: $companyId',
+                  );
                 }
               }
-              
+
               // 3. في response['companyId']
-              if ((companyId == null || companyId.isEmpty) && response['companyId'] != null) {
-                debugPrint('🔵 Found companyId in response.companyId: ${response['companyId']}');
+              if ((companyId == null || companyId.isEmpty) &&
+                  response['companyId'] != null) {
+                debugPrint(
+                  '🔵 Found companyId in response.companyId: ${response['companyId']}',
+                );
                 if (response['companyId'] is Map<String, dynamic>) {
-                  companyId = (response['companyId'] as Map<String, dynamic>)['_id']
-                      ?.toString();
-                  debugPrint('🔵 Extracted companyId from response object: $companyId');
+                  companyId =
+                      (response['companyId'] as Map<String, dynamic>)['_id']
+                          ?.toString();
+                  debugPrint(
+                    '🔵 Extracted companyId from response object: $companyId',
+                  );
                 } else {
                   companyId = response['companyId']?.toString();
-                  debugPrint('🔵 Using companyId from response as string: $companyId');
+                  debugPrint(
+                    '🔵 Using companyId from response as string: $companyId',
+                  );
                 }
               }
-              
+
               await _authService.saveAuthData(
                 token: data['token']?.toString() ?? '',
                 refreshToken: data['refreshToken']?.toString() ?? '',
@@ -115,7 +134,9 @@ class AuthRepository {
                 print('🔵 ====== END VERIFICATION ======');
               } else {
                 debugPrint('⚠️ CompanyId not found in any location');
-                debugPrint('⚠️ Searched in: user.companyId, data.companyId, response.companyId');
+                debugPrint(
+                  '⚠️ Searched in: user.companyId, data.companyId, response.companyId',
+                );
                 print('🔴 ====== COMPANY ID NOT FOUND ======');
                 print('Response structure:');
                 print('  - response keys: ${response.keys}');
@@ -144,6 +165,7 @@ class AuthRepository {
       return const Left(StatusRequest.serverException);
     }
   }
+
   Future<Either<StatusRequest, Map<String, dynamic>>> register({
     required String name,
     required String email,
@@ -189,6 +211,7 @@ class AuthRepository {
       return const Left(StatusRequest.serverException);
     }
   }
+
   Future<Either<StatusRequest, bool>> logout() async {
     debugPrint('🚪 Logout called');
     try {
@@ -237,6 +260,7 @@ class AuthRepository {
       return const Right(true);
     }
   }
+
   Future<Either<StatusRequest, Map<String, dynamic>>> refreshToken() async {
     debugPrint('🔄 Refresh token called');
     try {
@@ -294,6 +318,7 @@ class AuthRepository {
       return const Left(StatusRequest.serverException);
     }
   }
+
   Future<Either<StatusRequest, bool>> forgotPassword(String email) async {
     try {
       final result = await _apiService.post(
@@ -310,6 +335,181 @@ class AuthRepository {
         }
       });
     } catch (e) {
+      return const Left(StatusRequest.serverException);
+    }
+  }
+
+  Future<Either<dynamic, ClientModel>> createClient({
+    required String username,
+    required String email,
+    required String password,
+    required bool isActive,
+  }) async {
+    debugPrint('🔵 AuthRepository: Creating client...');
+    try {
+      final body = <String, dynamic>{
+        'username': username,
+        'email': email,
+        'password': password,
+        'role': '6942a1b121d1fb7ea37ae3ed',
+        'isActive': isActive,
+      };
+      debugPrint('🔵 Request body: $body');
+      final result = await _apiService.post(
+        ApiConstant.createClient,
+        body: body,
+        requiresAuth: true,
+      );
+      return result.fold(
+        (error) {
+          debugPrint('🔴 AuthRepository error creating client: $error');
+          return Left(error);
+        },
+        (response) {
+          try {
+            debugPrint('🟢 AuthRepository create client response received');
+            debugPrint('🟢 Response: $response');
+            if (response['success'] == true && response['data'] != null) {
+              final data = response['data'] as Map<String, dynamic>;
+              final client = ClientModel.fromJson(data);
+              debugPrint('✅ Successfully created client: ${client.username}');
+              return Right(client);
+            } else {
+              final errorMessage =
+                  response['message']?.toString() ??
+                  response['error']?.toString() ??
+                  'Failed to create client';
+              debugPrint('🔴 Failed to create client: $errorMessage');
+              return Left({
+                'error': StatusRequest.serverFailure,
+                'message': errorMessage,
+              });
+            }
+          } catch (e, stackTrace) {
+            debugPrint('🔴 Client creation parsing error: $e');
+            debugPrint('Stack trace: $stackTrace');
+            return Left({
+              'error': StatusRequest.serverException,
+              'message': 'An error occurred while processing the response: $e',
+            });
+          }
+        },
+      );
+    } catch (e) {
+      debugPrint('🔴 AuthRepository exception creating client: $e');
+      return const Left(StatusRequest.serverException);
+    }
+  }
+
+  Future<Either<dynamic, Map<String, dynamic>>> getClients({
+    int page = 1,
+    int limit = 10,
+  }) async {
+    debugPrint('🔵 AuthRepository: Getting clients...');
+    debugPrint('Page: $page, Limit: $limit');
+    try {
+      final queryParams = <String, String>{
+        'page': page.toString(),
+        'limit': limit.toString(),
+      };
+      final result = await _apiService.get(
+        ApiConstant.clients,
+        queryParams: queryParams,
+        requiresAuth: true,
+      );
+      return result.fold(
+        (error) {
+          debugPrint('🔴 AuthRepository error getting clients: $error');
+          return Left(error);
+        },
+        (response) {
+          try {
+            debugPrint('🟢 AuthRepository get clients response received');
+            debugPrint('🟢 Response: $response');
+            if (response['success'] == true && response['data'] != null) {
+              final data = response['data'] as Map<String, dynamic>;
+              final clientsList = data['clients'] as List<dynamic>? ?? [];
+              final pagination = data['pagination'] as Map<String, dynamic>?;
+              final clients = clientsList
+                  .map(
+                    (clientJson) => ClientModel.fromJson(
+                      clientJson as Map<String, dynamic>,
+                    ),
+                  )
+                  .toList();
+              debugPrint('✅ Successfully loaded ${clients.length} clients');
+              return Right({'clients': clients, 'pagination': pagination});
+            } else {
+              final errorMessage =
+                  response['message']?.toString() ??
+                  response['error']?.toString() ??
+                  'Failed to get clients';
+              debugPrint('🔴 Failed to get clients: $errorMessage');
+              return Left({
+                'error': StatusRequest.serverFailure,
+                'message': errorMessage,
+              });
+            }
+          } catch (e, stackTrace) {
+            debugPrint('🔴 Clients parsing error: $e');
+            debugPrint('Stack trace: $stackTrace');
+            return Left({
+              'error': StatusRequest.serverException,
+              'message': 'An error occurred while processing the response: $e',
+            });
+          }
+        },
+      );
+    } catch (e) {
+      debugPrint('🔴 AuthRepository exception getting clients: $e');
+      return const Left(StatusRequest.serverException);
+    }
+  }
+
+  Future<Either<dynamic, bool>> deleteClient(String clientId) async {
+    debugPrint('🔵 AuthRepository: Deleting client...');
+    debugPrint('Client ID: $clientId');
+    try {
+      final result = await _apiService.delete(
+        ApiConstant.deleteClient,
+        pathParams: {'id': clientId},
+        requiresAuth: true,
+      );
+      return result.fold(
+        (error) {
+          debugPrint('🔴 AuthRepository error deleting client: $error');
+          return Left(error);
+        },
+        (response) {
+          try {
+            debugPrint('🟢 AuthRepository delete client response received');
+            debugPrint('🟢 Response: $response');
+            if (response['success'] == true) {
+              debugPrint('✅ Successfully deleted client');
+              return const Right(true);
+            } else {
+              final errorMessage =
+                  response['message']?.toString() ??
+                  response['error']?.toString() ??
+                  'Failed to delete client';
+              debugPrint('🔴 Failed to delete client: $errorMessage');
+              return Left({
+                'error': StatusRequest.serverFailure,
+                'message': errorMessage,
+              });
+            }
+          } catch (e, stackTrace) {
+            debugPrint('🔴 Client deletion parsing error: $e');
+            debugPrint('Stack trace: $stackTrace');
+            return Left({
+              'error': StatusRequest.serverException,
+              'message': 'An error occurred while processing the response: $e',
+            });
+          }
+        },
+      );
+    } catch (e) {
+      debugPrint('🔴 AuthRepository exception deleting client: $e');
       return const Left(StatusRequest.serverException);
     }
   }

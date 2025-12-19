@@ -101,6 +101,8 @@ class ApiConstant {
   static const String notifications = '/settings/notifications';
   static const String uploadFile = '/upload';
   static const String uploadAvatar = '/upload/avatar';
+  static const String createClient = '/user';
+  static const String deleteClient = '/user/{id}';
   static String replacePathParams(String path, Map<String, String> params) {
     String result = path;
     params.forEach((key, value) {

@@ -5,33 +5,46 @@ import 'package:junior/core/constant/routes.dart';
 import 'package:junior/core/services/auth_service.dart';
 import 'package:junior/data/repository/auth_repository.dart';
 import 'package:junior/view/widgets/common/build_menu_item.dart';
+
 class CustomDrawer extends StatefulWidget {
   final Function(String)? onItemTap;
   const CustomDrawer({super.key, this.onItemTap});
   @override
   State<CustomDrawer> createState() => _CustomDrawerState();
 }
+
 class _CustomDrawerState extends State<CustomDrawer> {
   String? _username;
   String? _email;
+  String? _userRole;
   bool _isLoading = true;
   @override
   void initState() {
     super.initState();
     _loadUserInfo();
   }
+
   Future<void> _loadUserInfo() async {
     final authService = AuthService();
     final username = await authService.getUsername();
     final email = await authService.getUserEmail();
+    final role = await authService.getUserRole();
     if (mounted) {
       setState(() {
         _username = username;
         _email = email;
+        _userRole = role;
         _isLoading = false;
       });
     }
   }
+
+  bool _canAddClient() {
+    if (_userRole == null) return false;
+    final roleLower = _userRole!.toLowerCase();
+    return roleLower == 'admin' || roleLower == 'pm';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -187,6 +200,18 @@ class _CustomDrawerState extends State<CustomDrawer> {
                       Get.offAllNamed(AppRoute.assignments);
                     },
                   ),
+                  if (_canAddClient())
+                    buildMenuItem(
+                      icon: Icons.person,
+                      title: 'Clients',
+                      onTap: () {
+                        if (widget.onItemTap != null) {
+                          widget.onItemTap!('Clients');
+                        }
+                        Get.back();
+                        Get.toNamed(AppRoute.addClient);
+                      },
+                    ),
                 ],
               ),
             ),

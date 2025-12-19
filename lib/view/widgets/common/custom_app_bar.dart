@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:junior/core/constant/color.dart';
+import 'package:junior/core/constant/imageassets.dart';
 import 'package:junior/core/constant/responsive.dart';
 import 'package:junior/core/constant/routes.dart';
 import 'package:junior/controller/common/customAppBar_controller.dart';
@@ -62,7 +63,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             ] else ...[
               if (showHamburgerMenu) ...[
                 _buildHamburgerMenu(context),
-                SizedBox(width: Responsive.spacing(context, mobile: 16)),
+                SizedBox(width: Responsive.spacing(context, mobile: 12)),
+                _buildAppLogo(context),
+                SizedBox(width: Responsive.spacing(context, mobile: 12)),
               ],
               if (showSearch) ...[
                 Expanded(child: _buildSearchBar(context, controller)),
@@ -98,6 +101,21 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
         ),
       ),
+    );
+  }
+  Widget _buildAppLogo(BuildContext context) {
+    return Image.asset(
+      AppImageAsset.appIcon,
+      width: Responsive.size(context, mobile: 32),
+      height: Responsive.size(context, mobile: 32),
+      fit: BoxFit.contain,
+      errorBuilder: (context, error, stackTrace) {
+        return Icon(
+          Icons.business_center,
+          color: AppColor.primaryColor,
+          size: Responsive.iconSize(context, mobile: 24),
+        );
+      },
     );
   }
   Widget _buildSearchBar(

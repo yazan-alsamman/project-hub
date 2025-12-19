@@ -2,6 +2,9 @@ class AppImageAsset {
   static const rootImages = "assets/images";
   static const rootLotile = "assets/lottie";
   static const String logo = "$rootImages/logo.png";
+  static const String logoSvg = "$rootImages/logo/logo.svg";
+  static const String appIcon = "$rootImages/logo/projectHub_icon.png";
+  static const String fullLogo = "$rootImages/logo/projectHub_full_logo.png";
   static const String onBoardingImageOne = "$rootImages/onBoardingImageOne.png";
   static const String onBoardingImageTwo = "$rootImages/onBoardingImageTwo.png";
   static const String onBoardingImageThree = "$rootImages/onBoardingImageThree.png";

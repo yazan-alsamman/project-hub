@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:junior/core/constant/color.dart';
+import 'package:junior/core/constant/imageassets.dart';
 class BuildHeader extends StatelessWidget {
   final String title;
   final String subtitle;
@@ -14,13 +15,19 @@ class BuildHeader extends StatelessWidget {
           width: isTablet ? 80 : 60,
           height: isTablet ? 80 : 60,
           decoration: BoxDecoration(
-            color: AppColor.primaryColor,
+            color: Colors.transparent,
             borderRadius: BorderRadius.circular(12),
           ),
-          child: Icon(
-            Icons.mail_outline,
-            color: Colors.white,
-            size: isTablet ? 40 : 30,
+          child: Image.asset(
+            AppImageAsset.appIcon,
+            fit: BoxFit.contain,
+            errorBuilder: (context, error, stackTrace) {
+              return Icon(
+                Icons.business_center,
+                color: AppColor.primaryColor,
+                size: isTablet ? 40 : 30,
+              );
+            },
           ),
         ),
         SizedBox(height: isTablet ? 32 : 24),

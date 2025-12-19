@@ -8,6 +8,10 @@ class MyMiddleWare extends GetMiddleware {
   Myservices myservices = Get.find();
   @override
   RouteSettings? redirect(String? route) {
+    // Allow splash screen to load without redirect
+    if (route == AppRoute.splash) {
+      return null;
+    }
     if (route == AppRoute.projectDashboard ||
         route == AppRoute.analytics ||
         route == AppRoute.projects ||

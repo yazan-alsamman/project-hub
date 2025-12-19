@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:junior/core/constant/color.dart';
+import 'package:junior/core/constant/imageassets.dart';
 import 'package:junior/core/constant/routes.dart';
 import 'package:junior/core/services/auth_service.dart';
 import 'package:junior/data/repository/auth_repository.dart';
@@ -74,10 +75,17 @@ class _CustomDrawerState extends State<CustomDrawer> {
                           color: Colors.white.withOpacity(0.2),
                           borderRadius: BorderRadius.circular(25),
                         ),
-                        child: const Icon(
-                          Icons.person,
-                          color: Colors.white,
-                          size: 28,
+                        padding: const EdgeInsets.all(8),
+                        child: Image.asset(
+                          AppImageAsset.appIcon,
+                          fit: BoxFit.contain,
+                          errorBuilder: (context, error, stackTrace) {
+                            return const Icon(
+                              Icons.person,
+                              color: Colors.white,
+                              size: 28,
+                            );
+                          },
                         ),
                       ),
                       const SizedBox(width: 12),

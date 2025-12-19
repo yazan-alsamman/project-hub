@@ -1,4 +1,5 @@
 class AppRoute {
+  static const String splash = "/";
   static const String login = "/login";
   static const String onBoarding = "/onBoarding";
   static const String signUp = "/SignUp";

@@ -7,6 +7,7 @@ import 'package:junior/data/static/team_members_data.dart';
 import 'package:junior/view/screens/Tasks/tasks_Screen.dart';
 import 'package:junior/view/screens/auth/login.dart';
 import 'package:junior/view/screens/onBoarding.dart';
+import 'package:junior/view/screens/splash/splash_screen.dart';
 import 'package:junior/view/screens/projects/project_Screen.dart';
 import 'package:junior/view/screens/projects/project_details_screen.dart';
 import 'package:junior/view/screens/settings/settings.dart';
@@ -27,7 +28,11 @@ import 'package:junior/view/screens/auth/add_client_screen.dart';
 import 'package:junior/data/Models/project_model.dart';
 List<GetPage<dynamic>>? routes = [
   GetPage(
-    name: "/",
+    name: AppRoute.splash,
+    page: () => const SplashScreen(),
+  ),
+  GetPage(
+    name: AppRoute.onBoarding,
     page: () => const OnBoarding(),
     middlewares: [MyMiddleWare()],
   ),

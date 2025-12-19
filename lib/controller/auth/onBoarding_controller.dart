@@ -40,6 +40,6 @@ class OnBoardingControllerImp extends OnBoardingController {
   @override
   resetOnBoarding() {
     myservices.sharedPreferences.remove("onBoarding");
-    Get.offAllNamed("/");
+    Get.offAllNamed(AppRoute.splash);
   }
 }

@@ -12,11 +12,31 @@ class ApiService {
   factory ApiService() => _instance;
   ApiService._internal();
   final AuthService _authService = AuthService();
+  bool _isRefreshing = false;
+  final List<Completer<void>> _refreshCompleters = [];
   Future<Either<StatusRequest, Map<String, dynamic>>> get(
     String endpoint, {
     Map<String, String>? queryParams,
     Map<String, String>? pathParams,
     bool requiresAuth = true,
+  }) async {
+    return await _makeRequestWithRetry(
+      'GET',
+      endpoint,
+      queryParams: queryParams,
+      pathParams: pathParams,
+      requiresAuth: requiresAuth,
+    );
+  }
+
+  Future<Either<StatusRequest, Map<String, dynamic>>> _makeRequestWithRetry(
+    String method,
+    String endpoint, {
+    Map<String, String>? queryParams,
+    Map<String, String>? pathParams,
+    Map<String, dynamic>? body,
+    bool requiresAuth = true,
+    int retryCount = 0,
   }) async {
     try {
       if (!await checkInternet()) {
@@ -31,20 +51,75 @@ class ApiService {
             .replace(queryParameters: {...uri.queryParameters, ...queryParams})
             .toString();
       }
-      debugPrint('🔵 GET Request URL: $url');
-      debugPrint('🔵 Query params: $queryParams');
       final headers = await _buildHeaders(requiresAuth);
-      debugPrint('🔵 Headers: $headers');
-      debugPrint('🔵 Making GET request...');
-      final response = await http
-          .get(Uri.parse(url), headers: headers)
-          .timeout(ApiConstant.connectTimeout);
+      http.Response response;
+      
+      switch (method.toUpperCase()) {
+        case 'GET':
+          debugPrint('🔵 GET Request URL: $url');
+          debugPrint('🔵 Query params: $queryParams');
+          debugPrint('🔵 Headers: $headers');
+          response = await http
+              .get(Uri.parse(url), headers: headers)
+              .timeout(ApiConstant.connectTimeout);
+          break;
+        case 'POST':
+          debugPrint('🔵 POST Request URL: $url');
+          final bodyJson = body != null ? jsonEncode(body) : null;
+          debugPrint('🔵 Headers: $headers');
+          debugPrint('🔵 Body: $bodyJson');
+          response = await http
+              .post(Uri.parse(url), headers: headers, body: bodyJson)
+              .timeout(ApiConstant.connectTimeout);
+          break;
+        case 'PUT':
+          debugPrint('🔵 PUT Request URL: $url');
+          final bodyJson = body != null ? jsonEncode(body) : null;
+          debugPrint('🔵 Headers: $headers');
+          debugPrint('🔵 Body: $bodyJson');
+          response = await http
+              .put(Uri.parse(url), headers: headers, body: bodyJson)
+              .timeout(ApiConstant.connectTimeout);
+          break;
+        case 'DELETE':
+          debugPrint('🔵 DELETE Request URL: $url');
+          debugPrint('🔵 Headers: $headers');
+          response = await http
+              .delete(Uri.parse(url), headers: headers)
+              .timeout(ApiConstant.connectTimeout);
+          break;
+        default:
+          return const Left(StatusRequest.serverException);
+      }
+      
       debugPrint('🔵 Response status: ${response.statusCode}');
-      debugPrint('🔵 Response body length: ${response.body.length}');
       debugPrint('🔵 Response body: ${response.body}');
+      
+      // Handle 401 Unauthorized - Try to refresh token
+      if (response.statusCode == 401 && requiresAuth && retryCount == 0) {
+        debugPrint('🔴 Unauthorized (401) - Attempting to refresh token...');
+        final refreshSuccess = await _refreshToken();
+        if (refreshSuccess) {
+          debugPrint('✅ Token refreshed successfully, retrying original request...');
+          // Retry the original request with new token
+          return await _makeRequestWithRetry(
+            method,
+            endpoint,
+            queryParams: queryParams,
+            pathParams: pathParams,
+            body: body,
+            requiresAuth: requiresAuth,
+            retryCount: retryCount + 1,
+          );
+        } else {
+          debugPrint('🔴 Failed to refresh token, logging out...');
+          await _authService.logout();
+        }
+      }
+      
       return _handleResponse(response);
     } catch (e, stackTrace) {
-      debugPrint('🔴 GET request exception: $e');
+      debugPrint('🔴 Request exception: $e');
       debugPrint('🔴 Exception type: ${e.runtimeType}');
       debugPrint('🔴 Stack trace: $stackTrace');
       if (e.toString().contains('TimeoutException')) {
@@ -70,53 +145,14 @@ class ApiService {
     print('🔵 ====== API SERVICE POST CALLED ======');
     debugPrint('🔵 API SERVICE POST CALLED');
     print('Endpoint: $endpoint');
-    final url = pathParams != null
-        ? ApiConstant.buildUrlWithParams(endpoint, pathParams)
-        : ApiConstant.buildUrl(endpoint);
     try {
-      print('🔵 ====== API POST Request ======');
-      print('URL: $url');
-      debugPrint('🔵 API POST Request:');
-      debugPrint('URL: $url');
-      final hasInternet = await checkInternet();
-      if (!hasInternet) {
-        debugPrint(
-          '⚠️ Connectivity check failed, but proceeding with API call',
-        );
-        debugPrint(
-          '💡 This is normal for real devices - API call will handle connection errors',
-        );
-        debugPrint(
-          '💡 Make sure IP address is set correctly in api_constant.dart',
-        );
-      }
-      final headers = await _buildHeaders(requiresAuth);
-      final bodyJson = body != null ? jsonEncode(body) : null;
-      debugPrint('Headers: $headers');
-      debugPrint('Body: $bodyJson');
-      debugPrint('📤 Sending HTTP POST request...');
-      debugPrint(
-        '⏱️ Timeout set to: ${ApiConstant.connectTimeout.inSeconds} seconds',
+      return await _makeRequestWithRetry(
+        'POST',
+        endpoint,
+        pathParams: pathParams,
+        body: body,
+        requiresAuth: requiresAuth,
       );
-      final response = await http
-          .post(Uri.parse(url), headers: headers, body: bodyJson)
-          .timeout(
-            ApiConstant.connectTimeout,
-            onTimeout: () {
-              debugPrint(
-                '⏰ REQUEST TIMEOUT after ${ApiConstant.connectTimeout.inSeconds} seconds',
-              );
-              debugPrint('🔴 Failed to connect to: $url');
-              throw TimeoutException(
-                'Connection timeout',
-                ApiConstant.connectTimeout,
-              );
-            },
-          );
-      debugPrint('🟢 API Response received:');
-      debugPrint('Status Code: ${response.statusCode}');
-      debugPrint('Body: ${response.body}');
-      return _handleResponse(response);
     } catch (e, stackTrace) {
       debugPrint('🔴 API Error occurred:');
       debugPrint('Error type: ${e.runtimeType}');
@@ -126,21 +162,18 @@ class ApiService {
         debugPrint(
           '⏰ TIMEOUT ERROR: Request took longer than ${ApiConstant.connectTimeout.inSeconds} seconds',
         );
-        debugPrint('💡 Check if server is running and accessible at: $url');
         return const Left(StatusRequest.timeoutException);
       }
       if (e.toString().contains('SocketException') ||
           e.toString().contains('Failed host lookup') ||
           e.toString().contains('Network is unreachable')) {
         debugPrint('🌐 NETWORK ERROR: Cannot reach server');
-        debugPrint('💡 Check network connection and IP address: $url');
         return const Left(StatusRequest.offlineFailure);
       }
       if (e.toString().contains('Connection refused')) {
         debugPrint(
           '🚫 CONNECTION REFUSED: Server is not listening or firewall blocked',
         );
-        debugPrint('💡 Make sure server is running on port 5000');
         return const Left(StatusRequest.offlineFailure);
       }
       debugPrint('❌ UNKNOWN ERROR: $e');
@@ -154,18 +187,13 @@ class ApiService {
     bool requiresAuth = true,
   }) async {
     try {
-      if (!await checkInternet()) {
-        return const Left(StatusRequest.offlineFailure);
-      }
-      final url = pathParams != null
-          ? ApiConstant.buildUrlWithParams(endpoint, pathParams)
-          : ApiConstant.buildUrl(endpoint);
-      final headers = await _buildHeaders(requiresAuth);
-      final bodyJson = body != null ? jsonEncode(body) : null;
-      final response = await http
-          .put(Uri.parse(url), headers: headers, body: bodyJson)
-          .timeout(ApiConstant.connectTimeout);
-      return _handleResponse(response);
+      return await _makeRequestWithRetry(
+        'PUT',
+        endpoint,
+        pathParams: pathParams,
+        body: body,
+        requiresAuth: requiresAuth,
+      );
     } catch (e) {
       if (e.toString().contains('TimeoutException')) {
         return const Left(StatusRequest.timeoutException);
@@ -179,17 +207,12 @@ class ApiService {
     bool requiresAuth = true,
   }) async {
     try {
-      if (!await checkInternet()) {
-        return const Left(StatusRequest.offlineFailure);
-      }
-      final url = pathParams != null
-          ? ApiConstant.buildUrlWithParams(endpoint, pathParams)
-          : ApiConstant.buildUrl(endpoint);
-      final headers = await _buildHeaders(requiresAuth);
-      final response = await http
-          .delete(Uri.parse(url), headers: headers)
-          .timeout(ApiConstant.connectTimeout);
-      return _handleResponse(response);
+      return await _makeRequestWithRetry(
+        'DELETE',
+        endpoint,
+        pathParams: pathParams,
+        requiresAuth: requiresAuth,
+      );
     } catch (e) {
       if (e.toString().contains('TimeoutException')) {
         return const Left(StatusRequest.timeoutException);
@@ -210,6 +233,7 @@ class ApiService {
     }
     return headers;
   }
+
   Either<StatusRequest, Map<String, dynamic>> _handleResponse(
     http.Response response,
   ) {
@@ -232,7 +256,6 @@ class ApiService {
           return Right(responseBody);
         case 401:
           debugPrint('🔴 Unauthorized (401)');
-          _authService.logout();
           return Right(responseBody);
         case 403:
           debugPrint('🔴 Forbidden (403) - Insufficient permissions/role');
@@ -268,5 +291,101 @@ class ApiService {
       debugPrint('Stack trace: $stackTrace');
       return const Left(StatusRequest.serverException);
     }
+  }
+
+  Future<bool> _refreshToken() async {
+    // Prevent multiple simultaneous refresh attempts
+    if (_isRefreshing) {
+      debugPrint('⏳ Token refresh already in progress, waiting...');
+      final completer = Completer<void>();
+      _refreshCompleters.add(completer);
+      await completer.future;
+      return true; // Assume success if another refresh succeeded
+    }
+
+    _isRefreshing = true;
+    debugPrint('🔄 Starting token refresh...');
+
+    try {
+      final refreshTokenValue = await _authService.getRefreshToken();
+      if (refreshTokenValue == null || refreshTokenValue.isEmpty) {
+        debugPrint('🔴 No refresh token found');
+        _isRefreshing = false;
+        _completeRefreshCompleters(false);
+        return false;
+      }
+
+      debugPrint('🔵 Calling refresh token API...');
+      final url = ApiConstant.buildUrl(ApiConstant.refreshToken);
+      final headers = <String, String>{
+        'Content-Type': ApiConstant.contentType,
+        'Accept': ApiConstant.accept,
+      };
+      final body = jsonEncode({'refreshToken': refreshTokenValue});
+
+      final response = await http
+          .post(Uri.parse(url), headers: headers, body: body)
+          .timeout(ApiConstant.connectTimeout);
+
+      debugPrint('🟢 Refresh token response status: ${response.statusCode}');
+      debugPrint('🟢 Refresh token response body: ${response.body}');
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        try {
+          final responseBody = jsonDecode(response.body) as Map<String, dynamic>;
+          if (responseBody['success'] == true && responseBody['data'] != null) {
+            final data = responseBody['data'] as Map<String, dynamic>;
+            final newToken = data['token']?.toString() ?? '';
+            final newRefreshToken = data['refreshToken']?.toString() ?? '';
+
+            if (newToken.isEmpty) {
+              debugPrint('🔴 New token is empty');
+              _isRefreshing = false;
+              _completeRefreshCompleters(false);
+              return false;
+            }
+
+            await _authService.saveToken(newToken);
+            if (newRefreshToken.isNotEmpty) {
+              await _authService.saveRefreshToken(newRefreshToken);
+            }
+
+            debugPrint('✅ Token refreshed successfully');
+            _isRefreshing = false;
+            _completeRefreshCompleters(true);
+            return true;
+          } else {
+            debugPrint('🔴 Refresh token failed: ${responseBody['message']}');
+            _isRefreshing = false;
+            _completeRefreshCompleters(false);
+            return false;
+          }
+        } catch (e) {
+          debugPrint('🔴 Error parsing refresh token response: $e');
+          _isRefreshing = false;
+          _completeRefreshCompleters(false);
+          return false;
+        }
+      } else {
+        debugPrint('🔴 Refresh token failed with status: ${response.statusCode}');
+        _isRefreshing = false;
+        _completeRefreshCompleters(false);
+        return false;
+      }
+    } catch (e) {
+      debugPrint('🔴 Exception refreshing token: $e');
+      _isRefreshing = false;
+      _completeRefreshCompleters(false);
+      return false;
+    }
+  }
+
+  void _completeRefreshCompleters(bool success) {
+    for (var completer in _refreshCompleters) {
+      if (!completer.isCompleted) {
+        completer.complete();
+      }
+    }
+    _refreshCompleters.clear();
   }
 }
